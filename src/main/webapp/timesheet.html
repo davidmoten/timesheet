@@ -1,0 +1,83 @@
+<!doctype html>
+ 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>jQuery UI Autocomplete - Default functionality</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css" />
+  <style media="screen" type="text/css">
+	body {
+		font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+		font-size: 62.5%;
+		margin-left: 5%;
+		margin-top: 2%;
+	}
+
+    .busy {
+        color: green;
+    }
+
+	#table,td {
+      padding-right:30px;
+    }
+
+    .invisible {
+      visibility:hidden;
+	}
+
+    .invalid {
+      color: red;
+    }
+    
+    .links {
+      color: blue;
+      padding-bottom: 30px;
+    }
+
+    .link {
+       float:left; 
+       padding-right: 20px;
+    }
+
+	#main {
+      clear: both;
+    }
+
+
+  </style>
+  <script>
+  $(function() {
+
+  });
+  </script>
+</head>
+<body>
+ 
+<div class="ui-widget">
+  <div class="links">
+      <div id="refresh" class="link">Refresh</div><div id="report" class="link">Report</div>
+  </div>
+
+  <div id="main">
+	  <label for="tags">12/05/2013: </label>
+	  <input id="time-range" />
+
+	  <table id="times">
+		<tr><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>
+		<tr><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><a href="." class="invisible">Delete</a></td></tr>
+		<tr><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><a href=".">Delete</a></td></tr>
+	  </table>
+	  
+  </div>
+
+</div>
+ 
+ 
+</body>
+</html>
