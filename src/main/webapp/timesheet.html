@@ -99,8 +99,27 @@
     }
 
 	function submitTime() {
- 	   $('#times').append('<tr><td>' + weekday[theDate.getDay()] + '<td>'+ formattedDate() +'</td>'+ '<td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>');
-       $('#times').find('tr').sortElements(function(a, b){
+       var s = $("#time-range").val();
+       var hh1 = s.substring(0,2);
+       var mm1 = s.substring(2,4);
+       var hh2 = s.substring(4,6);
+       var mm2 = s.substring(6,8);
+	   var valid = s.length==8 && 
+                   parseInt(hh1)>=0 && parseInt(hh1) <=23 && 
+                   parseInt(mm1)>=0 && parseInt(mm1) <=59 && 
+                   parseInt(hh2)>=0 && parseInt(hh2)<=23 &&
+                   parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
+				   parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
+	  var cls = valid ? "busy" :"invalid";
+      var msg = valid ? "Saving..." : "Invalid";
+      var deleteClass = valid ? "invisible" :"";
+ 	   $('#times').append('<tr><td>' + weekday[theDate.getDay()] + '<td>'+ formattedDate() +'</td>'+ '<td>'+ hh1 + ':' + mm1 + '</td><td>'+ hh2 + ':' + mm2 + '</td><td class="'+cls+'">'+msg+'</td><td><a href="." class="'+deleteClass+'">Delete</a></td></tr>');
+	   sortTable();
+	   $("#time-range").val('');
+	}
+
+    function sortTable() {
+	   $('#times').find('tr').sortElements(function(a, b){
 
          return orderedFormat($(a).children('td')[1].textContent) + $(a).children('td')[2].textContent <
                 orderedFormat($(b).children('td')[1].textContent) + $(b).children('td')[2].textContent      ? 1 : -1;
