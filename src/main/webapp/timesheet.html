@@ -3,11 +3,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>jQuery UI Autocomplete - Default functionality</title>
+  <title>Timesheet</title>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-  <link rel="stylesheet" href="/resources/demos/style.css" />
   <style media="screen" type="text/css">
 	body {
 		font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
@@ -51,6 +50,74 @@
   <script>
   $(function() {
 
+	var weekday=new Array(7);
+	weekday[0]="Sunday";
+	weekday[1]="Monday";
+	weekday[2]="Tuesday";
+	weekday[3]="Wednesday";
+	weekday[4]="Thursday";
+	weekday[5]="Friday";
+	weekday[6]="Saturday";
+
+	var theDate = new Date();
+	theDate.setHours(0);
+	theDate.setMinutes(0);
+	theDate.setSeconds(0);
+	theDate.setMilliseconds(0);
+
+
+	function formattedDate() {
+	 var dd = theDate.getDate();
+	 var mm = theDate.getMonth()+1; //January is 0!
+	 var yyyy = theDate.getFullYear();
+	 if(dd<10){dd='0'+dd} 
+	 if(mm<10){mm='0'+mm} 
+	 var theDateFormatted = weekday[theDate.getDay()] + ' '+dd+'/'+mm+'/'+yyyy;
+	 return theDateFormatted;
+	}
+
+	function updateDate() {
+	 $("#date").text(formattedDate());
+	}
+
+	function nextDate() {
+	 theDate.setDate(theDate.getDate() +1);
+	 updateDate();
+	}
+
+	function previousDate() {
+	 theDate.setDate(theDate.getDate() -1);
+	 updateDate();
+	}
+
+	function submitTime() {
+ 	   $('#times').append('<tr><td>' + $("#date").text() + '<td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>');
+	}
+
+	updateDate();
+	$("#time-range").keydown(function(event) {
+	// Allow: backspace, delete, tab, escape, enter, F5
+	if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || event.keyCode == 116 ||
+		 // Allow: Ctrl+A
+		(event.keyCode == 65 && event.ctrlKey === true) || 
+		 // Allow: home, end, left, right
+		(event.keyCode >= 35 && event.keyCode <= 40)) {
+		     // let it happen, don't do anything
+		     if (event.keyCode==38)
+		         nextDate();
+		     else if (event.keyCode==40)
+				previousDate();
+		     else if (event.keyCode == 13)
+		        submitTime();
+		     return;
+	}
+	else {
+		// Ensure that it is a number and stop the keypress
+		if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+		    event.preventDefault(); 
+		}   
+	}
+	});
   });
   </script>
 </head>
@@ -62,16 +129,16 @@
   </div>
 
   <div id="main">
-	  <label for="tags">12/05/2013: </label>
+	  <label id="date" for="tags">12/05/2013: </label>
 	  <input id="time-range" />
 
 	  <table id="times">
-		<tr><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>
-		<tr><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><a href="." class="invisible">Delete</a></td></tr>
-		<tr><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><a href=".">Delete</a></td></tr>
+		<tr><td>Saturday</td><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>
+		<tr><td>Saturday</td><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>Friday</td><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><a href="." class="invisible">Delete</a></td></tr>
+		<tr><td>Friday</td><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>Thursday</td><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
+		<tr><td>Thursday</td><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><a href=".">Delete</a></td></tr>
 	  </table>
 	  
   </div>
