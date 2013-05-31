@@ -65,19 +65,22 @@
 	theDate.setSeconds(0);
 	theDate.setMilliseconds(0);
 
-
-	function formattedDate() {
-	 var dd = theDate.getDate();
+    function formattedDate() {
+     var dd = theDate.getDate();
 	 var mm = theDate.getMonth()+1; //January is 0!
 	 var yyyy = theDate.getFullYear();
 	 if(dd<10){dd='0'+dd} 
 	 if(mm<10){mm='0'+mm} 
-	 var theDateFormatted = weekday[theDate.getDay()] + ' '+dd+'/'+mm+'/'+yyyy;
+	 return dd+'/'+mm+'/'+yyyy;
+    }
+
+	function formattedDateWithDay() {
+	 var theDateFormatted = weekday[theDate.getDay()] + ' '+ formattedDate();
 	 return theDateFormatted;
 	}
 
 	function updateDate() {
-	 $("#date").text(formattedDate());
+	 $("#date").text(formattedDateWithDay());
 	}
 
 	function nextDate() {
@@ -91,7 +94,7 @@
 	}
 
 	function submitTime() {
- 	   $('#times').append('<tr><td>' + $("#date").text() + '<td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>');
+ 	   $('#times').prepend('<tr><td>' + weekday[theDate.getDay()] + '<td>'+ formattedDate() +'</td>'+ '<td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>');
 	}
 
 	updateDate();
