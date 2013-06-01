@@ -116,8 +116,7 @@
 
     var count = 0;
 
-	function submitTime() {
-       var s = $("#time-range").val();
+	function submitTime(s) {
        var hh1 = s.substring(0,2);
        var mm1 = s.substring(2,4);
        var hh2 = s.substring(4,6);
@@ -144,11 +143,13 @@
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
            $("#msg"+rowId).html("Deleting...");
+		   $("#delete"+rowId).toggleClass("invisible");
 		   if (!valid) {
-			 setTimeout(function () {$("#"+rowId).remove();},2000);
+			 setTimeout(function () {$("#"+rowId).remove();},1000);
 		   }
            else {
 			 //TODO call delete service
+             setTimeout(function () {$("#"+rowId).remove();},1000);
 		   } 
        });
 	   sortTable();
@@ -166,7 +167,7 @@
 			$("#msg"+rowId).html("");
 			$("#delete"+rowId).toggleClass("invisible");
 			$("#delete"+rowId).addClass("delete");
-           },3000);
+           },1000);
 	       
  	   }
 	}
@@ -193,7 +194,7 @@
 		     else if (event.keyCode==40)
 				previousDate();
 		     else if (event.keyCode == 13)
-		        submitTime();
+		        submitTime($("#time-range").val());
 		     return;
 	}
 	else {
@@ -203,7 +204,14 @@
 		}   
 	}
 	});
+
+    
+  submitTime("08301200");
+  submitTime("13001730");
+  submitTime("08001300");
+  submitTime("14001645");
   });
+
   </script>
 </head>
 <body>
@@ -220,12 +228,6 @@
 	  <input id="time-range" />
 
 	  <table id="times">
-		<tr><td>Thursday</td><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><div class="invisible">Delete</div></td></tr>
-		<tr><td>Thursday</td><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
-		<tr><td>Wednesday</td><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><div class="invisible">Delete</div></td></tr>
-		<tr><td>Wednesday</td><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
-		<tr><td>Tuesday</td><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
-		<tr><td>Tuesday</td><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><div class="delete">Delete</div></td></tr>
 	  </table>
 	  
   </div>
