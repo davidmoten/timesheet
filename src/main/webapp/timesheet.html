@@ -116,6 +116,12 @@
 
     function refresh() {
 		$("#times").empty();
+        setTimeout(function () {
+			  submitTime("08301200");
+			  submitTime("13001730");
+			  submitTime("08001300");
+			  submitTime("14001645");
+		  },1000);
     }
 
     $("#refresh").click(refresh);
@@ -209,11 +215,7 @@
 	}
 	});
 
-    
-  submitTime("08301200");
-  submitTime("13001730");
-  submitTime("08001300");
-  submitTime("14001645");
+    refresh();
   });
 
   </script>
