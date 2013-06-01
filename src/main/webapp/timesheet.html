@@ -114,7 +114,11 @@
       });
     }
 
-    var count = 0;
+    function refresh() {
+		$("#times").empty();
+    }
+
+    $("#refresh").click(refresh);
 
 	function submitTime(s) {
        var hh1 = s.substring(0,2);
