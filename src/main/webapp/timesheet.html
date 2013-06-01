@@ -115,12 +115,14 @@
     }
 
     function refresh() {
+        $("#working").toggleClass("invisible");
 		$("#times").empty();
         setTimeout(function () {
 			  submitTime("08301200");
 			  submitTime("13001730");
 			  submitTime("08001300");
 			  submitTime("14001645");
+              $("#working").toggleClass("invisible");
 		  },1000);
     }
 
@@ -215,6 +217,7 @@
 	}
 	});
 
+
     refresh();
   });
 
@@ -230,9 +233,9 @@
   </div>
 
   <div id="main">
+	  <img id="working" class="invisible" src="image/spinner.gif"/><br/>
 	  <label id="date" for="tags">12/05/2013: </label>
 	  <input id="time-range" />
-
 	  <table id="times">
 	  </table>
 	  
