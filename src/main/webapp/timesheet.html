@@ -42,6 +42,10 @@
        padding-right: 20px;
     }
 
+	.delete {
+        color:blue;
+    }
+
 	#main {
       clear: both;
     }
@@ -105,6 +109,8 @@
       });
     }
 
+    var count = 0;
+
 	function submitTime() {
        var s = $("#time-range").val();
        var hh1 = s.substring(0,2);
@@ -119,11 +125,39 @@
 				   parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
 	  var cls = valid ? "busy" :"invalid";
       var msg = valid ? "Saving..." : "Invalid";
-      var deleteClass = valid ? "invisible" :"";
+      var deleteClass = valid ? "invisible" :"delete";
       var rowId = guid();
- 	   $('#times').append('<tr id="tr'+ rowId + '"><td>' + weekday[theDate.getDay()] + '<td>'+ formattedDate() +'</td>'+ '<td>'+ hh1 + ':' + mm1 + '</td><td>'+ hh2 + ':' + mm2 + '</td><td class="'+cls+'">'+msg+'</td><td><a href="." class="'+deleteClass+'">Delete</a></td></tr>');
+ 	   $('#times').append(
+			'<tr id="'+ rowId + '">'+
+			'<td>' + weekday[theDate.getDay()] + '</td>'+
+			'<td>'+ formattedDate() +'</td>'+ 
+			'<td>'+ hh1 + ':' + mm1 + '</td>'+
+			'<td>'+ hh2 + ':' + mm2 + '</td>'+
+			'<td id="msg'+rowId+'" class="'+cls+'">'+msg+'</td>'+
+			'<td><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></td>'+
+			'</tr>');
+	   //define delete action
+	   $("#delete"+rowId).click(function (){
+           $("#msg"+rowId).html("Deleting...");
+		   if (!valid) {
+			 setTimeout(function () {$("#"+rowId).remove();},2000);
+		   }
+           else {
+			 //TODO call delete service
+		   } 
+       });
 	   sortTable();
 	   $("#time-range").val('');
+
+	   //do ajax save call
+       if (valid) {
+           setTimeout(function() {
+			$("#msg"+rowId).html("");
+			$("#delete"+rowId).toggleClass("invisible");
+			$("#delete"+rowId).addClass("delete");
+           },3000);
+	       
+ 	   }
 	}
 
     function sortTable() {
@@ -165,7 +199,9 @@
  
 <div class="ui-widget">
   <div class="links">
-      <div id="refresh" class="link">Refresh</div><div id="report" class="link">Report</div>
+      <div id="refresh" class="link">Refresh</div>
+      <div id="report" class="link">Report</div>
+	  <div id="settings" class="link">Settings</div>
   </div>
 
   <div id="main">
@@ -173,12 +209,12 @@
 	  <input id="time-range" />
 
 	  <table id="times">
-		<tr><td>Thursday</td><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><a href="." class="invisible">Delete</a></td></tr>
-		<tr><td>Thursday</td><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>Wednesday</td><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><a href="." class="invisible">Delete</a></td></tr>
-		<tr><td>Wednesday</td><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>Tuesday</td><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><a href=".">Delete</a></td></tr>
-		<tr><td>Tuesday</td><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><a href=".">Delete</a></td></tr>
+		<tr><td>Thursday</td><td>11/04/2013</td><td>13:00</td><td>17:30</td><td class="busy">Saving...</td><td><div class="invisible">Delete</div></td></tr>
+		<tr><td>Thursday</td><td>11/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
+		<tr><td>Wednesday</td><td>10/04/2013</td><td>13:45</td><td>18:30</td><td class="busy">Deleting...</td><td><div class="invisible">Delete</div></td></tr>
+		<tr><td>Wednesday</td><td>10/04/2013</td><td>08:45</td><td>12:30</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
+		<tr><td>Tuesday</td><td>09/04/2013</td><td>12:55</td><td>19:00</td><td class="busy"></td><td><div class="delete">Delete</div></td></tr>
+		<tr><td>Tuesday</td><td>09/04/2013</td><td>08:45</td><td>07:30</td><td class="invalid">Invalid</td><td><div class="delete">Delete</div></td></tr>
 	  </table>
 	  
   </div>
