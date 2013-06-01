@@ -64,11 +64,16 @@
 	weekday[5]="Friday";
 	weekday[6]="Saturday";
 
+    var settings={};
+    settings.moveToNextWorkingDayAfterTime="15:00"
+    settings.workingDays=[2,3,4,5];
+
 	var theDate = new Date();
 	theDate.setHours(0);
 	theDate.setMinutes(0);
 	theDate.setSeconds(0);
 	theDate.setMilliseconds(0);
+
 
     function formattedDate() {
      var dd = theDate.getDate();
@@ -148,6 +153,12 @@
        });
 	   sortTable();
 	   $("#time-range").val('');
+
+	   if (valid && (hh2+':'+mm2)>=settings.moveToNextWorkingDayAfterTime) {
+         nextDate();
+		 while ($.inArray(theDate.getDay(),settings.workingDays)==-1)
+           nextDate();
+       }
 
 	   //do ajax save call
        if (valid) {
