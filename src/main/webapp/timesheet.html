@@ -55,6 +55,33 @@
       clear: both;
     }
 
+	.timesDay {
+		float:left;
+	}
+
+	.timesDate {
+		float:left;
+	}
+ 
+	.timesFrom {
+		float:left;
+	}
+ 
+	.timesTo {
+		float:left;
+	}
+ 
+	.timesDelete {
+		float:left;
+	}
+
+	.timesMsg {
+		float:left;
+	}
+ 
+
+ 
+
 
   </style>
   <script>
@@ -149,14 +176,15 @@
       var deleteClass = valid ? "invisible" :"delete";
       var rowId = guid();
  	   $('#times').append(
-			'<tr id="'+ rowId + '">'+
-			'<td>' + weekday[theDate.getDay()] + '</td>'+
-			'<td>'+ formattedDate() +'</td>'+ 
-			'<td>'+ hh1 + ':' + mm1 + '</td>'+
-			'<td>'+ hh2 + ':' + mm2 + '</td>'+
-			'<td><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></td>'+
-			'<td id="msg'+rowId+'" class="'+cls+'">'+msg+'</td>'+
-			'</tr>');
+			'<div id="'+ rowId + '" class="row">'+
+			'<div class="timesDay">' + weekday[theDate.getDay()] + '</div>'+
+			'<div class="timesDate">'+ formattedDate() +'</div>'+ 
+			'<div class="timesFrom">'+ hh1 + ':' + mm1 + '</div>'+
+			'<div class="timesTo">'+ hh2 + ':' + mm2 + '</div>'+
+			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></div>'+
+			'<div id="msg'+rowId+'" class="'+cls+' timesMsg">'+msg+'</div>'+
+			'</div>'+
+			'<br style="clear:both;"/>');
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
            $("#msg"+rowId).html("Deleting...");
@@ -190,10 +218,10 @@
 	}
 
     function sortTable() {
-	   $('#times').find('tr').sortElements(function(a, b){
+	   $('#times').find('.row').sortElements(function(a, b){
 
-         return orderedFormat($(a).children('td')[1].textContent) + $(a).children('td')[2].textContent <
-                orderedFormat($(b).children('td')[1].textContent) + $(b).children('td')[2].textContent      ? 1 : -1;
+         return orderedFormat($(a).children('div')[1].textContent) + $(a).children('div')[2].textContent <
+                orderedFormat($(b).children('div')[1].textContent) + $(b).children('div')[2].textContent      ? 1 : -1;
        });
 	}
 
