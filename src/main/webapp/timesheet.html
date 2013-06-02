@@ -288,8 +288,8 @@
 
 	$( "#settings-dialog" ).dialog({
       autoOpen: false,
-      height: 300,
-      width: 350,
+      height: $(window).height()-50,
+      width: "80%",
       modal: true,
       buttons: {
         "Ok": function() {
@@ -319,7 +319,16 @@
 <div class="ui-widget">
 
   <div id="settings-dialog">
-	<p>hi</p>
+	<p>Working days:</p>
+	<input type="checkbox" id="sunday" value="true">Sunday<br>
+	<input type="checkbox" id="monday" value="true">Monday<br>
+	<input type="checkbox" id="tuesday" value="true" checked="true">Tuesday<br>
+	<input type="checkbox" id="wednesday" value="true" checked="true">Wednesday<br>
+	<input type="checkbox" id="thursday" value="true" checked="true">Thursday<br>
+	<input type="checkbox" id="friday" value="true" checked="true">Friday<br>
+	<input type="checkbox" id="saturday" value="true">Saturday<br>
+	<p>Auto-advance to next day after time:<input value="15:00"/></p>
+
   </div>
 
   <div class="links">
