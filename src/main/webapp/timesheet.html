@@ -11,7 +11,7 @@
   <style media="screen" type="text/css">
 	body {
 		font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
-		font-size: 62.5%;
+		font-size: 80%;
 		margin-left: 5%;
 		margin-top: 2%;
 	}
@@ -55,31 +55,53 @@
       clear: both;
     }
 
+	
+	#day {
+		width:7em;
+		float:left;
+		padding-top:4px;
+	}
+
+	#date {
+		width:7em;
+		float:left;
+		padding-top:4px;
+	}
+
+
 	.timesDay {
 		float:left;
+		width: 7em;
 	}
 
 	.timesDate {
 		float:left;
+		width: 7em;
 	}
- 
+
 	.timesFrom {
 		float:left;
+		width: 4em;
 	}
  
 	.timesTo {
 		float:left;
+		width: 4em;
 	}
  
 	.timesDelete {
 		float:left;
+		width:5em;
 	}
 
 	.timesMsg {
 		float:left;
+		10em;
 	}
  
-
+	#time-range {
+		width: 7em;
+	}
  
 
 
@@ -122,7 +144,8 @@
 	}
 
 	function updateDate() {
-	 $("#date").text(formattedDateWithDay());
+     $("#day").text(weekday[theDate.getDay()]);
+	 $("#date").text(formattedDate());
 	}
 
 	function nextDate() {
@@ -183,8 +206,9 @@
 			'<div class="timesTo">'+ hh2 + ':' + mm2 + '</div>'+
 			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></div>'+
 			'<div id="msg'+rowId+'" class="'+cls+' timesMsg">'+msg+'</div>'+
-			'</div>'+
-			'<br style="clear:both;"/>');
+			'<br style="clear:both;"/>'+			
+			'</div>'
+			);
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
            $("#msg"+rowId).html("Deleting...");
@@ -197,7 +221,7 @@
              setTimeout(function () {$("#"+rowId).remove();},1000);
 		   } 
        });
-	   sortTable();
+	   sortRows();
 	   $("#time-range").val('');
 
 	   if (valid && (hh2+':'+mm2)>=settings.moveToNextWorkingDayAfterTime) {
@@ -217,7 +241,7 @@
  	   }
 	}
 
-    function sortTable() {
+    function sortRows() {
 	   $('#times').find('.row').sortElements(function(a, b){
 
          return orderedFormat($(a).children('div')[1].textContent) + $(a).children('div')[2].textContent <
@@ -252,6 +276,7 @@
 
 
     refresh();
+	$("#time-range").focus();
   });
 
   </script>
@@ -267,10 +292,10 @@
 
   <div id="main">
 	  <img id="working" class="invisible" src="image/spinner.gif"/><br/>
-	  <label id="date" for="tags">12/05/2013: </label>
+	  <div id="day"></div>
+	  <label id="date" for="time-range"></label>
 	  <input id="time-range" />
-	  <table id="times">
-	  </table>
+	  <div id="times"></div>
       <div id="more">More</div>
   </div>
 
