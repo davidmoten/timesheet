@@ -101,6 +101,7 @@
  
 	#time-range {
 		width: 7em;
+		margin-bottom:10px;
 	}
  
 
@@ -129,23 +130,23 @@
 	theDate.setMilliseconds(0);
 
 
-    function formattedDate() {
-     var dd = theDate.getDate();
-	 var mm = theDate.getMonth()+1; //January is 0!
-	 var yyyy = theDate.getFullYear();
+    function formattedDate(d) {
+     var dd = d.getDate();
+	 var mm = d.getMonth()+1; //January is 0!
+	 var yyyy = d.getFullYear();
 	 if(dd<10){dd='0'+dd} 
 	 if(mm<10){mm='0'+mm} 
 	 return dd+'/'+mm+'/'+yyyy;
     }
 
 	function formattedDateWithDay() {
-	 var theDateFormatted = weekday[theDate.getDay()] + ' '+ formattedDate();
+	 var theDateFormatted = weekday[theDate.getDay()] + ' '+ formattedDate(theDate);
 	 return theDateFormatted;
 	}
 
 	function updateDate() {
      $("#day").text(weekday[theDate.getDay()]);
-	 $("#date").text(formattedDate());
+	 $("#date").text(formattedDate(theDate));
 	}
 
 	function nextDate() {
@@ -194,33 +195,14 @@
                    parseInt(hh2)>=0 && parseInt(hh2)<=23 &&
                    parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
 				   parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
-	  var cls = valid ? "busy" :"invalid";
-      var msg = valid ? "Saving..." : "Invalid";
-      var deleteClass = valid ? "invisible" :"delete";
+
+	  var t1 = hh1 + ":" + mm1;
+	  var t2 = hh2 + ":" + mm2;
+      var date = theDate;
       var rowId = guid();
- 	   $('#times').append(
-			'<div id="'+ rowId + '" class="row">'+
-			'<div class="timesDay">' + weekday[theDate.getDay()] + '</div>'+
-			'<div class="timesDate">'+ formattedDate() +'</div>'+ 
-			'<div class="timesFrom">'+ hh1 + ':' + mm1 + '</div>'+
-			'<div class="timesTo">'+ hh2 + ':' + mm2 + '</div>'+
-			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></div>'+
-			'<div id="msg'+rowId+'" class="'+cls+' timesMsg">'+msg+'</div>'+
-			'<br style="clear:both;"/>'+			
-			'</div>'
-			);
-	   //define delete action
-	   $("#delete"+rowId).click(function (){
-           $("#msg"+rowId).html("Deleting...");
-		   $("#delete"+rowId).toggleClass("invisible");
-		   if (!valid) {
-			 setTimeout(function () {$("#"+rowId).remove();},1000);
-		   }
-           else {
-			 //TODO call delete service
-             setTimeout(function () {$("#"+rowId).remove();},1000);
-		   } 
-       });
+	  
+	  addDate(date,t1,t2,rowId,valid);
+
 	   sortRows();
 	   $("#time-range").val('');
 
@@ -239,6 +221,36 @@
            },1000);
 	       
  	   }
+	}
+
+	function addDate(date,t1,t2,rowId,valid) {
+	  var msgCls = valid ? "busy" :"invalid";
+      var msg = valid ? "Saving..." : "Invalid";
+      var deleteClass = valid ? "invisible" :"delete";
+ 	   $('#times').append(
+			'<div id="'+ rowId + '" class="row">'+
+			'<div class="timesDay">' + weekday[date.getDay()] + '</div>'+
+			'<div class="timesDate">'+ formattedDate(date) +'</div>'+ 
+			'<div class="timesFrom">'+ t1 + '</div>'+
+			'<div class="timesTo">'+ t2 + '</div>'+
+			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></div>'+
+			'<div id="msg'+rowId+'" class="'+msgCls+' timesMsg">'+msg+'</div>'+
+			'<br style="clear:both;"/>'+			
+			'</div>'
+			);
+	   //define delete action
+	   $("#delete"+rowId).click(function (){
+           $("#msg"+rowId).html("Deleting...");
+		   $("#delete"+rowId).toggleClass("invisible");
+		   if (!valid) {
+			 setTimeout(function () {$("#"+rowId).remove();},1000);
+		   }
+           else {
+			 //TODO call delete service
+             setTimeout(function () {$("#"+rowId).remove();},1000);
+		   } 
+       });
+
 	}
 
     function sortRows() {
