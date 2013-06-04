@@ -23,6 +23,8 @@ import com.google.common.base.Preconditions;
 public class CommandServlet extends HttpServlet {
 
 	private static final String COMMAND_SAVE_TIME = "saveTime";
+	private static final String COMMAND_GET_TIMES = "getTimes";
+
 	private static final long serialVersionUID = 8026282588720357161L;
 
 	// Testing url
@@ -31,11 +33,18 @@ public class CommandServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// TODO
+
 		String command = req.getParameter("command");
 		if (COMMAND_SAVE_TIME.equals(command))
 			saveTime(req);
+		else if (COMMAND_GET_TIMES.equals(command))
+			getTimes(req, resp);
 
+	}
+
+	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
+		int n = Integer.parseInt(req.getParameter("n"));
+		// String json = getTimes(n);
 	}
 
 	private void saveTime(HttpServletRequest req) {
@@ -56,7 +65,7 @@ public class CommandServlet extends HttpServlet {
 
 		// kind=db,name=schema,
 		Key timesheetKey = KeyFactory.createKey("Timesheet", "Timesheet");
-		// kind=table,name=schema,
+		// kind=table,entity=row
 		Entity entry = new Entity("Entry", timesheetKey);
 		entry.setProperty("user", user);
 		entry.setProperty("startTime", start);
@@ -66,6 +75,7 @@ public class CommandServlet extends HttpServlet {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		datastore.put(entry);
+
 	}
 
 	private Date parseDate(String date) {
