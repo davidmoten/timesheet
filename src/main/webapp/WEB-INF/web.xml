@@ -15,6 +15,14 @@
 		<servlet-name>sign</servlet-name>
 		<servlet-class>com.github.davidmoten.SignGuestbookServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>command</servlet-name>
+		<servlet-class>com.github.davidmoten.CommandServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>command</servlet-name>
+		<url-pattern>/command</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>sign</servlet-name>
 		<url-pattern>/sign</url-pattern>
