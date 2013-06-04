@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +16,12 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -44,7 +51,33 @@ public class CommandServlet extends HttpServlet {
 
 	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
 		int n = Integer.parseInt(req.getParameter("n"));
-		// String json = getTimes(n);
+		String json = getTimes(n);
+	}
+
+	private String getTimes(int n) {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		long t = toUtc(System.currentTimeMillis());
+		Filter sinceFilter = new FilterPredicate("startTime",
+				FilterOperator.GREATER_THAN_OR_EQUAL, new Date(t));
+		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
+				user);
+		Filter userAndSinceFilter = CompositeFilterOperator.and(userFilter,
+				sinceFilter);
+		Query q = new Query("Entry").setFilter(userAndSinceFilter);
+
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		PreparedQuery pq = datastore.prepare(q);
+
+		for (Entity entity : pq.asIterable()) {
+			Date startTime = (Date) entity.getProperty("startTime");
+			Long durationMs = (Long) entity.getProperty("durationMs");
+			System.out.println("Entry: " + startTime + " " + durationMs);
+		}
+
+		return "";
+
 	}
 
 	private void saveTime(HttpServletRequest req) {
@@ -87,6 +120,10 @@ public class CommandServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private static long toUtc(long t) {
+		return t + TimeZone.getDefault().getOffset(t);
 	}
 
 }
