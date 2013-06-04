@@ -1,116 +1,127 @@
 <!doctype html>
- 
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Timesheet</title>
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-  <script src="jquery.sortElements.js"></script>
-  <style media="screen" type="text/css">
-	body {
-		font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
-		font-size: 80%;
-		margin-left: 5%;
-		margin-top: 2%;
-	}
+<meta charset="utf-8" />
+<title>Timesheet</title>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="jquery.sortElements.js"></script>
+<style media="screen" type="text/css">
+body {
+	font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana",
+		"sans-serif";
+	font-size: 80%;
+	margin-left: 5%;
+	margin-top: 2%;
+}
 
-    .busy {
-        color: green;
-    }
+.busy {
+	color: green;
+}
 
-	#table,td {
-      padding-right:30px;
-    }
+#table,td {
+	padding-right: 30px;
+}
 
-    .invisible {
-      visibility:hidden;
-	}
+.invisible {
+	visibility: hidden;
+}
 
-    .invalid {
-      color: red;
-    }
-    
-    .links {
-      color: blue;
-      padding-bottom: 30px;
-    }
+.invalid {
+	color: red;
+}
 
-    .link {
-       float:left; 
-       padding-right: 20px;
-       cursor:pointer;
-    }
+.links {
+	color: blue;
+	padding-bottom: 30px;
+}
 
-    #more {
-	   color:blue;
-       margin-top:10px; 
-       cursor:pointer;   
-	}
+.link {
+	float: left;
+	padding-right: 20px;
+	cursor: pointer;
+}
 
-	.delete {
-        color:blue;
-        cursor:pointer;
-    }
+#more {
+	color: blue;
+	margin-top: 10px;
+	cursor: pointer;
+}
 
-	#main {
-      clear: both;
-    }
+.delete {
+	color: blue;
+	cursor: pointer;
+}
 
-	
-	#day {
-		width:6.5em;
-		float:left;
-		padding-top:4px;
-	}
+#main {
+	clear: both;
+}
 
-	#date {
-		width:7em;
-		float:left;
-		padding-top:4px;
-	}
+#day {
+	width: 6.5em;
+	float: left;
+	padding-top: 4px;
+}
 
+#date {
+	width: 7em;
+	float: left;
+	padding-top: 4px;
+}
 
-	.timesDay {
-		float:left;
-		width: 6.5em;
-	}
+.timesDay {
+	float: left;
+	width: 6.5em;
+}
 
-	.timesDate {
-		float:left;
-		width: 7em;
-	}
+.timesDate {
+	float: left;
+	width: 7em;
+}
 
-	.timesFrom {
-		float:left;
-		width: 4em;
-	}
- 
-	.timesTo {
-		float:left;
-		width: 4em;
-	}
- 
-	.timesDelete {
-		float:left;
-		width:5em;
-	}
+.timesFrom {
+	float: left;
+	width: 4em;
+}
 
-	.timesMsg {
-		float:left;
-		10em;
-	}
- 
-	#time-range {
-		width: 7em;
-		margin-bottom:10px;
-	}
- 
+.timesTo {
+	float: left;
+	width: 4em;
+}
 
+.timesDelete {
+	float: left;
+	width: 5em;
+}
 
-  </style>
-  <script>
+.timesMsg {
+	float: left;
+	10
+	em;
+}
+
+#time-range {
+	width: 7em;
+	margin-bottom: 10px;
+}
+
+#standardDay {
+	width: 20em;
+}
+
+.help {
+	font-size: 62.5%;
+	margin-left: 2em;
+}
+
+#autoAdvanceTime {
+	width: 4em;
+}
+</style>
+<script>
   $(function() {
 
 	var weekday=new Array(7);
@@ -125,6 +136,7 @@
     var settings={};
     settings.moveToNextWorkingDayAfterTime="15:00"
     settings.workingDays=[2,3,4,5];
+    settings.standardDay=["08301230","13001700"];
 
 	var theDate = new Date();
 	theDate.setHours(0);
@@ -282,7 +294,15 @@
 		     return;
 	}
 	else {
-		// Ensure that it is a number and stop the keypress
+		// if s pressed then put in standard day
+		if (event.keyCode == 83){
+			event.preventDefault();
+			for (i=0;i<settings.standardDay.length;i++) {
+				submitTime(settings.standardDay[i]);
+			}
+		}
+		
+		// Cancel the keypress if not a number 
 		if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
 		    event.preventDefault(); 
 		}   
@@ -318,39 +338,57 @@
   </script>
 </head>
 <body>
- 
-<div class="ui-widget">
 
-  <div id="settings-dialog">
-	<p>Working days:</p>
-	<input type="checkbox" id="sunday" value="true">Sunday<br>
-	<input type="checkbox" id="monday" value="true">Monday<br>
-	<input type="checkbox" id="tuesday" value="true" checked="true">Tuesday<br>
-	<input type="checkbox" id="wednesday" value="true" checked="true">Wednesday<br>
-	<input type="checkbox" id="thursday" value="true" checked="true">Thursday<br>
-	<input type="checkbox" id="friday" value="true" checked="true">Friday<br>
-	<input type="checkbox" id="saturday" value="true">Saturday<br>
-	<p>Auto-advance to next day after time:<input value="15:00"/></p>
+	<div class="ui-widget">
 
-  </div>
+		<div id="settings-dialog">
 
-  <div class="links">
-      <div id="refresh" class="link">Refresh</div>
-      <div id="report" class="link">Report</div>
-	  <div id="settings" class="link">Settings</div>
-  </div>
+			<p>
+				Auto-advance to next day after time (HHMM):&nbsp;<input
+					id="autoAdvanceTime" value="1500" />
 
-  <div id="main">
-	  <img id="working" class="invisible" src="image/spinner.gif"/><br/>
-	  <div id="day"></div>
-	  <label id="date" for="time-range"></label>
-	  <input id="time-range" />
-	  <div id="times"></div>
-      <div id="more">More</div>
-  </div>
+			</p>
+			<p class="help">If an auto-advance time is specified (in format
+				HHMM) then the date will be auto-advanced to the next working day if
+				the end time of a submission is greater than this time.</p>
 
-</div>
- 
- 
+			<p>Working days:</p>
+			<p class="help">Used by auto-advance.</p>
+			<input type="checkbox" id="sunday" value="true">Sunday<br>
+			<input type="checkbox" id="monday" value="true">Monday<br>
+			<input type="checkbox" id="tuesday" value="true" checked="true">Tuesday<br>
+			<input type="checkbox" id="wednesday" value="true" checked="true">Wednesday<br>
+			<input type="checkbox" id="thursday" value="true" checked="true">Thursday<br>
+			<input type="checkbox" id="friday" value="true" checked="true">Friday<br>
+			<input type="checkbox" id="saturday" value="true">Saturday<br>
+
+			<p>
+				Standard day (space delimited):&nbsp;<input id="standardDay"
+					value="08301230 13001700" />
+			</p>
+			<p class="help">A standard day is input using the 's' character
+				in the time field. To specify a standard day of 08:30 to 12:30 then
+				back working between 13:00 and 17:30, enter '08301230 13001730' in
+				this field.</p>
+
+		</div>
+
+		<div class="links">
+			<div id="refresh" class="link">Refresh</div>
+			<div id="report" class="link">Report</div>
+			<div id="settings" class="link">Settings</div>
+		</div>
+
+		<div id="main">
+			<img id="working" class="invisible" src="image/spinner.gif" /><br />
+			<div id="day"></div>
+			<label id="date" for="time-range"></label> <input id="time-range" />
+			<div id="times"></div>
+			<div id="more">More</div>
+		</div>
+
+	</div>
+
+
 </body>
 </html>
