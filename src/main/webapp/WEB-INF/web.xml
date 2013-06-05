@@ -21,7 +21,7 @@
 
 	<servlet>
 		<servlet-name>main</servlet-name>
-		<jsp-file>timesheet.html</jsp-file>
+		<jsp-file>/main.jsp</jsp-file>
 	</servlet>
 	
 	
@@ -32,7 +32,7 @@
 	
 	<servlet>
 		<servlet-name>load</servlet-name>
-		<jsp-file>load.html</jsp-file>
+		<jsp-file>/load.jsp</jsp-file>
 	</servlet>
 	
 	
