@@ -474,6 +474,11 @@ body {
       .click(function() {
         $( "#settings-dialog" ).dialog( "open" );
       });
+	
+	$("#load")
+	  .click(function(){
+		 document.location.href='load'; 
+	  });
 
     refresh();
 	$("#time-range").focus();
@@ -520,6 +525,7 @@ body {
 		<div class="links">
 			<div id="refresh" class="link">Refresh</div>
 			<div id="report" class="link">Report</div>
+			<div id="load" class="link">Load</div>
 			<div id="settings" class="link">Settings</div>
 		</div>
 

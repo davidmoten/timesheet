@@ -8,11 +8,17 @@
        -moz-box-sizing: border-box;
             box-sizing: border-box;
             width:100%;
-            height:80%;
+            height:50%;
 }
 </style>
 </head>
+<body>
+<h3>Load times</h3>
 <form action="command?command=loadTimes" method="post">
+<p>Format to submit times is one time range per line of this format:</p>
+<p style="font:monospace;font-size:75%;">dd/mm/yy&lt;TAB&gt;HH:mm&lt;TAB&gt;HH:mm</p>
+<p>For example, the working day 08:30 to 12:30 lunch break to 13:30 and work to 17:30 is represented by (tab delimited):</p>
+<p style="font:monospace;font-size:75%">01/06/13	08:30	12:30<br/>01/06/13	13:30	17:30</p>
 <textarea class="boxSizingBorder" name="times" >
 01/05/09	09:30	13:00
 01/05/09	13:20	17:20
@@ -1601,6 +1607,7 @@
 31/05/13	08:50	12:30
 31/05/13	13:00	17:30
 </textarea>
-<input type="submit"/>
+<input style="margin-top:10px;" type="submit"/>
 </form>
+</body>
 </html>

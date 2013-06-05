@@ -66,28 +66,33 @@ public class CommandServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
 		String command = req.getParameter("command");
 		if (COMMAND_LOAD_TIMES.equals(command))
-			loadTimes(req);
+			loadTimes(req, resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
 	}
 
-	private void loadTimes(HttpServletRequest req) {
+	private void loadTimes(HttpServletRequest req, HttpServletResponse resp) {
 		String s = req.getParameter("times");
 		BufferedReader br = new BufferedReader(new StringReader(s));
 		String line;
 		try {
+			int count = 0;
 			while ((line = br.readLine()) != null) {
-				String[] items = line.split("\t");
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy HH:mmZ");
-				Date t1 = df.parse(items[0] + " " + items[1] + "UTC");
-				Date t2 = df.parse(items[0] + " " + items[2] + "UTC");
-				saveTime(UUID.randomUUID().toString(), t1,
-						t2.getTime() - t1.getTime());
+				if (line.trim().length() > 0) {
+					String[] items = line.split("\t");
+					SimpleDateFormat df = new SimpleDateFormat(
+							"dd/MM/yy HH:mmZ");
+					Date t1 = df.parse(items[0] + " " + items[1] + "UTC");
+					Date t2 = df.parse(items[0] + " " + items[2] + "UTC");
+					saveTime(UUID.randomUUID().toString(), t1, t2.getTime()
+							- t1.getTime());
+					count++;
+				}
 			}
 			br.close();
+			resp.getWriter().print(count + " entries loaded");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (ParseException e) {
