@@ -1,10 +1,13 @@
 package com.github.davidmoten;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +35,7 @@ public class CommandServlet extends HttpServlet {
 
 	private static final String COMMAND_SAVE_TIME = "saveTime";
 	private static final String COMMAND_GET_TIMES = "getTimes";
+	private static final String COMMAND_LOAD_TIMES = "loadTimes";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -47,6 +51,40 @@ public class CommandServlet extends HttpServlet {
 			saveTime(req);
 		else if (COMMAND_GET_TIMES.equals(command))
 			getTimes(req, resp);
+		else
+			throw new RuntimeException("unknown command: " + command);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		String command = req.getParameter("command");
+		if (COMMAND_LOAD_TIMES.equals(command))
+			loadTimes(req);
+		else
+			throw new RuntimeException("unknown command: " + command);
+	}
+
+	private void loadTimes(HttpServletRequest req) {
+		String s = req.getParameter("times");
+		BufferedReader br = new BufferedReader(new StringReader(s));
+		String line;
+		try {
+			while ((line = br.readLine()) != null) {
+				String[] items = line.split("\t");
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy HH:mmZ");
+				Date t1 = df.parse(items[0] + " " + items[1] + "UTC");
+				Date t2 = df.parse(items[0] + " " + items[2] + "UTC");
+				saveTime(UUID.randomUUID().toString(), t1,
+						t2.getTime() - t1.getTime());
+			}
+			br.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 
@@ -129,6 +167,7 @@ public class CommandServlet extends HttpServlet {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		datastore.put(entry);
+		System.out.println("saved " + start + " " + durationMs);
 
 	}
 

@@ -123,6 +123,10 @@ body {
 </style>
 <script>
   $(function() {
+	  
+	$.ajaxSetup ({  
+	    cache: false  
+	});
 
 	var weekday=new Array(7);
 	weekday[0]="Sunday";
@@ -177,70 +181,190 @@ body {
     function orderedFormat(date) {
       return date.substring(6,8) + date.substring(3,5) + date.substring(0,2);
     }
-
+    
+    function getURLParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+    }
+    
     function guid() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
       });
     }
+    
+    function formatTime(minutes) {
+    	var h = Math.floor(minutes/60);
+    	var m = minutes - h*60;
+    	var hh;
+    	if (h<10) 
+    		hh="0"+ h;
+    	else 
+    		hh =h;
+    	if (m<10)
+    		mm = "0" + m;
+    	else 
+    		mm = m;
+    	return hh + ":" + mm;
+    }
+    
+    //unit test formatTime
+    assert("11:20"==formatTime(680),"formatTime test 1");
+    assert("00:01"==formatTime(1), "formatTime test 2");
+    
+    function assert(b,msg){
+    	if (!b) alert(msg + " failed");
+    }
 
+    var offline = getURLParameter("offline") == "true";
+    
+    var offlineTimes = new Object();
+    offlineTimes.entries = 
+			  [  
+			    {"startTime" : "2013-05-17T09:00:00.000Z","durationMs" : "19200000"},
+	            {"startTime" : "2013-05-28T08:50:00.000Z","durationMs" : "13200000"},
+	            {"startTime" : "2013-05-28T13:10:00.000Z","durationMs" : "12300000"},
+	            {"startTime" : "2013-05-29T08:50:00.000Z","durationMs" : "13200000"},
+	            {"startTime" : "2013-05-29T13:00:00.000Z","durationMs" : "15600000"},
+	            {"startTime" : "2013-05-30T08:55:00.000Z","durationMs" : "12900000"},	
+	            {"startTime" : "2013-05-30T13:05:00.000Z","durationMs" : "15000000"},
+	            {"startTime" : "2013-05-31T08:50:00.000Z","durationMs" : "13200000"},
+	            {"startTime" : "2013-05-31T13:00:00.000Z","durationMs" : "16200000"}	
+		       ];
+    
     function refresh() {
         $("#working").toggleClass("invisible");
 		$("#times").empty();
-        setTimeout(function () {
-			  submitTime("08301200");
-			  submitTime("13001730");
-			  submitTime("08001300");
-			  submitTime("14001645");
-              $("#working").toggleClass("invisible");
-		  },1000);
+		if (offline) {
+        	setTimeout(function () {
+	        	  loadTimes(offlineTimes);
+				  submitTime("08301200");
+				  submitTime("13001730");
+				  submitTime("08001300");
+				  submitTime("14001645");
+				  sortRows();
+	              $("#working").toggleClass("invisible");
+		  	},1000);
+		} else {
+			$.ajax({
+  		      type: "GET",
+  		      url: "command",
+  		      contentType: 'application/json',
+  		      dataType: "json",
+  		      data: "command=getTimes&n=100",
+  		      success: function (response) {
+  		    	loadTimes(response);
+  		        console.log("loaded");
+  		        sortRows();
+                $("#working").toggleClass("invisible");
+  		      },
+  		      error: function (xhr, ajaxOptions, thrownError) {
+  		        alert("could not load times due to " + xhr.status  + ","+ thrownError);
+  		      }
+  		    });
+		}
+    }
+    
+    function loadTimes(times) {
+    	for (i=0;i<times.entries.length;i++) {
+  		  var entry = times.entries[i];
+  		  var year = parseInt(entry.startTime.substring(0,4));
+  		  var month = parseInt(entry.startTime.substring(5,7));
+  		  var day = parseInt(entry.startTime.substring(8,10));
+  		  var date = new Date(year,month-1,day,0,0,0);
+  		  var hh1 = parseInt(entry.startTime.substring(11,13));
+  		  var mm1 = parseInt(entry.startTime.substring(14,16));
+  		  var durationMs = parseInt(entry.durationMs);
+  		  var startMinutes = hh1*60 + mm1;
+  		  var finishMinutes = startMinutes + durationMs/60000;
+  		  var t1 = formatTime(startMinutes);
+  		  var t2 = formatTime(finishMinutes);
+  		  console.log("dt="+date + ",t1=" + t1 + ",t2="+ t2);
+  		  var rowId = guid();
+  		  addDate(date,t1,t2,rowId,true,"");
+  		  rowReady(rowId);
+  	  }
     }
 
+    function twoDigits(n) {
+    	if (n<10) return "0"+ n;
+    	else return "" + n;
+    }
+    
+    assert("01" == twoDigits(1),"twoDigits test 1");
+    assert("23" == twoDigits(23),"twoDigits test 2");
+    
     $("#refresh").click(refresh);
+    
+    function rowReady(rowId) {
+    	$("#msg"+rowId).html("");
+		$("#delete"+rowId).removeClass("invisible");
+		$("#delete"+rowId).addClass("delete");
+    }
 
 	function submitTime(s) {
-       var hh1 = s.substring(0,2);
-       var mm1 = s.substring(2,4);
-       var hh2 = s.substring(4,6);
-       var mm2 = s.substring(6,8);
-	   var valid = s.length==8 && 
-                   parseInt(hh1)>=0 && parseInt(hh1) <=23 && 
-                   parseInt(mm1)>=0 && parseInt(mm1) <=59 && 
-                   parseInt(hh2)>=0 && parseInt(hh2)<=23 &&
-                   parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
-				   parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
+		var hh1 = s.substring(0,2);
+		var mm1 = s.substring(2,4);
+		var hh2 = s.substring(4,6);
+		var mm2 = s.substring(6,8);
+		var valid = s.length==8 && 
+		        parseInt(hh1)>=0 && parseInt(hh1) <=23 && 
+		        parseInt(mm1)>=0 && parseInt(mm1) <=59 && 
+		        parseInt(hh2)>=0 && parseInt(hh2)<=23 &&
+		        parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
+				parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
+		
+		var t1 = hh1 + ":" + mm1;
+		var t2 = hh2 + ":" + mm2;
+		var date = theDate;
+		var rowId = guid();
+		var durationMs = (parseInt(hh2)*60+parseInt(mm2)-(parseInt(hh1)*60+parseInt(mm1)))*60000;
+		
+		addDate(date,t1,t2,rowId,valid,"Saving...");
 
-	  var t1 = hh1 + ":" + mm1;
-	  var t2 = hh2 + ":" + mm2;
-      var date = theDate;
-      var rowId = guid();
-	  
-	  addDate(date,t1,t2,rowId,valid);
-
-	   sortRows();
-	   $("#time-range").val('');
-
-	   if (valid && (hh2+':'+mm2)>=settings.moveToNextWorkingDayAfterTime) {
-         nextDate();
-		 while ($.inArray(theDate.getDay(),settings.workingDays)==-1)
-           nextDate();
-       }
-
-	   //do ajax save call
-       if (valid) {
-           setTimeout(function() {
-			$("#msg"+rowId).html("");
-			$("#delete"+rowId).toggleClass("invisible");
-			$("#delete"+rowId).addClass("delete");
-           },1000);
-	       
- 	   }
+	   	sortRows();
+	   	$("#time-range").val('');
+	
+	   	if (valid && (hh2+':'+mm2)>=settings.moveToNextWorkingDayAfterTime) {
+	        nextDate();
+		 	while ($.inArray(theDate.getDay(),settings.workingDays)==-1)
+	          nextDate();
+	      }
+	
+	   	//do ajax save call
+	    if (valid) {
+	    	if (offline) {
+		    	setTimeout(function() {
+					rowReady(rowId);
+		          	},1000);
+	    	} else {
+	    		var startTime = date.getFullYear() + 
+	    					"-" + twoDigits(date.getMonth()+1) +
+	    					"-" + twoDigits(date.getDay()) + 
+	    					"-" + hh1 + 
+	    					"-" + mm1
+	    					
+	    		var parameters = "command=saveTime&start="+startTime + "&durationMs="+durationMs + "&id="+rowId;
+	    		$.ajax({
+	    		      type: "GET",
+	    		      url: "command",
+	    		      dataType: "html",
+	    		      data: parameters,
+	    		      success: function (response) {
+	    		        console.log("saved");
+	    		        rowReady(rowId);
+	    		      },
+	    		      error: function (xhr, ajaxOptions, thrownError) {
+	    		        alert("could not save time due to " + xhr.status  + ","+ thrownError);
+	    		      }
+	    		    });
+	    	}
+	    }
 	}
 
-	function addDate(date,t1,t2,rowId,valid) {
+	function addDate(date,t1,t2,rowId,valid,defaultMsg) {
 	  var msgCls = valid ? "busy" :"invalid";
-      var msg = valid ? "Saving..." : "Invalid";
+      var msg = valid ? defaultMsg : "Invalid";
       var deleteClass = valid ? "invisible" :"delete";
  	   $('#times').append(
 			'<div id="'+ rowId + '" class="row">'+
@@ -256,7 +380,7 @@ body {
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
            $("#msg"+rowId).html("Deleting...");
-		   $("#delete"+rowId).toggleClass("invisible");
+		   $("#delete"+rowId).removeClass("invisible");
 		   if (!valid) {
 			 setTimeout(function () {$("#"+rowId).remove();},1000);
 		   }
@@ -277,6 +401,7 @@ body {
 	}
 
 	updateDate();
+	
 	$("#time-range").keydown(function(event) {
 	// Allow: backspace, delete, tab, escape, enter, F5
 	if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || event.keyCode == 116 ||
