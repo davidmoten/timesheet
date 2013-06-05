@@ -379,6 +379,9 @@ body {
 			);
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
+		   var answer = confirm("Are you sure you want to delete this row?");
+		   if (answer != true) return;
+		   
            $("#msg"+rowId).html("Deleting...");
 		   $("#delete"+rowId).removeClass("invisible");
 		   
