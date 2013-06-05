@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -52,31 +53,51 @@ public class CommandServlet extends HttpServlet {
 	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
 		int n = Integer.parseInt(req.getParameter("n"));
 		String json = getTimes(n);
+		resp.setContentType("application/json");
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private String getTimes(int n) {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		long t = toUtc(System.currentTimeMillis());
+		long t = toUtc(System.currentTimeMillis() - n * 24 * 3600 * 1000L);
 		Filter sinceFilter = new FilterPredicate("startTime",
 				FilterOperator.GREATER_THAN_OR_EQUAL, new Date(t));
 		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
 				user);
 		Filter userAndSinceFilter = CompositeFilterOperator.and(userFilter,
 				sinceFilter);
-		Query q = new Query("Entry").setFilter(userAndSinceFilter);
+		Query q = new Query("Entry").setFilter(userAndSinceFilter).addSort(
+				"startTime", SortDirection.ASCENDING);
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		PreparedQuery pq = datastore.prepare(q);
 
+		StringBuilder s = new StringBuilder();
+		s.append("{\n  \"entries\":[\n");
+		boolean first = true;
 		for (Entity entity : pq.asIterable()) {
 			Date startTime = (Date) entity.getProperty("startTime");
 			Long durationMs = (Long) entity.getProperty("durationMs");
-			System.out.println("Entry: " + startTime + " " + durationMs);
-		}
+			SimpleDateFormat df = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:00.000'Z'");
+			df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			if (!first)
+				s.append(",\n");
 
-		return "";
+			s.append("      {\"startTime\" : \"").append(df.format(startTime))
+					.append("\"").append(",").append("\"durationMs\" : ")
+					.append("\"").append(durationMs).append("\"").append("}");
+			first = false;
+		}
+		s.append("\n]}");
+		System.out.println(s.toString());
+		return s.toString();
 
 	}
 
