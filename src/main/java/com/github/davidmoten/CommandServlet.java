@@ -36,6 +36,7 @@ public class CommandServlet extends HttpServlet {
 	private static final String COMMAND_SAVE_TIME = "saveTime";
 	private static final String COMMAND_GET_TIMES = "getTimes";
 	private static final String COMMAND_LOAD_TIMES = "loadTimes";
+	private static final Object COMMAND_DELETE = "delete";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -51,8 +52,15 @@ public class CommandServlet extends HttpServlet {
 			saveTime(req);
 		else if (COMMAND_GET_TIMES.equals(command))
 			getTimes(req, resp);
+		else if (COMMAND_DELETE.equals(command))
+			deleteEntry(req, resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
+	}
+
+	private void deleteEntry(HttpServletRequest req, HttpServletResponse resp) {
+		String id = req.getParameter("id");
+		deleteEntry(id);
 	}
 
 	@Override
@@ -99,6 +107,20 @@ public class CommandServlet extends HttpServlet {
 		}
 	}
 
+	private void deleteEntry(String id) {
+		Filter idFilter = new FilterPredicate("entryId", FilterOperator.EQUAL,
+				id);
+		Query q = new Query("Entry").setFilter(idFilter);
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		PreparedQuery pq = datastore.prepare(q);
+		System.out.println("deleting");
+		for (Entity entity : pq.asIterable()) {
+			datastore.delete(entity.getKey());
+			System.out.println("deleted " + entity.getKey());
+		}
+	}
+
 	private String getTimes(int n) {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
@@ -122,6 +144,7 @@ public class CommandServlet extends HttpServlet {
 		for (Entity entity : pq.asIterable()) {
 			Date startTime = (Date) entity.getProperty("startTime");
 			Long durationMs = (Long) entity.getProperty("durationMs");
+			String id = (String) entity.getProperty("entryId");
 			SimpleDateFormat df = new SimpleDateFormat(
 					"yyyy-MM-dd'T'HH:mm:00.000'Z'");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -129,8 +152,11 @@ public class CommandServlet extends HttpServlet {
 				s.append(",\n");
 
 			s.append("      {\"startTime\" : \"").append(df.format(startTime))
-					.append("\"").append(",").append("\"durationMs\" : ")
-					.append("\"").append(durationMs).append("\"").append("}");
+					.append("\"").append(",");
+			s.append("\"durationMs\" : ").append("\"").append(durationMs)
+					.append("\"").append(",");
+			s.append("\"id\" : ").append("\"").append(id).append("\"")
+					.append("}");
 			first = false;
 		}
 		s.append("\n]}");
@@ -162,6 +188,7 @@ public class CommandServlet extends HttpServlet {
 		entry.setProperty("user", user);
 		entry.setProperty("startTime", start);
 		entry.setProperty("durationMs", durationMs);
+		entry.setProperty("entryId", id);
 		// TODO add tags as a list
 
 		DatastoreService datastore = DatastoreServiceFactory

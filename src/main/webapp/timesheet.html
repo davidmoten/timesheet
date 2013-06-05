@@ -280,7 +280,7 @@ body {
   		  var t1 = formatTime(startMinutes);
   		  var t2 = formatTime(finishMinutes);
   		  console.log("dt="+date + ",t1=" + t1 + ",t2="+ t2);
-  		  var rowId = guid();
+  		  var rowId = entry.id;
   		  addDate(date,t1,t2,rowId,true,"");
   		  rowReady(rowId);
   	  }
@@ -381,12 +381,28 @@ body {
 	   $("#delete"+rowId).click(function (){
            $("#msg"+rowId).html("Deleting...");
 		   $("#delete"+rowId).removeClass("invisible");
+		   
 		   if (!valid) {
 			 setTimeout(function () {$("#"+rowId).remove();},1000);
 		   }
            else {
-			 //TODO call delete service
-             setTimeout(function () {$("#"+rowId).remove();},1000);
+			 if (offline)
+             	setTimeout(function () {$("#"+rowId).remove();},1000);
+			 else {
+				 $.ajax({
+	    		      type: "GET",
+	    		      url: "command",
+	    		      dataType: "html",
+	    		      data: "command=delete&id="+rowId,
+	    		      success: function (response) {
+	    		        console.log("deleted");
+	    		        $("#"+rowId).remove();
+	    		      },
+	    		      error: function (xhr, ajaxOptions, thrownError) {
+	    		        alert("could not save time due to " + xhr.status  + ","+ thrownError);
+	    		      }
+	    		    });
+			 }
 		   } 
        });
 
