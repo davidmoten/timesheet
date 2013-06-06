@@ -42,6 +42,10 @@ body {
 	visibility: hidden;
 }
 
+.invisibleCompact {
+	display:none;
+}
+
 .invalid {
 	color: red;
 }
@@ -309,6 +313,8 @@ body {
     
     function refresh() {
         $("#working").removeClass("invisible");
+        $("#main").removeClass("invisibleCompact");
+        $("#reporting").addClass("invisibleCompact");
 		$("#times").empty();
 		if (offline) {
         	setTimeout(function () {
@@ -559,7 +565,8 @@ body {
 	
 	$("#report")
     .click(function() {
-      $( "#report-dialog" ).dialog( "open" );
+      $( "#reporting" ).removeClass("invisibleCompact");
+      $("#main").addClass("invisibleCompact");
     });
 	
 	$("#from").datepicker();
@@ -670,25 +677,6 @@ body {
 	   buffer += '<p class="spaceBelow">Date:</p>';
 	   $("#reportContent").append(buffer);
     }
-    
-    $( "#report-dialog" ).dialog({
-        autoOpen: false,
-        dialogClass: "no-close",
-        height: $(window).height(),
-        width: "100%",
-        modal: true,
-        buttons: {
-          "Print": function() {
-			  $('#report-dialog').printElement();        	  
-              $( this ).dialog( "close" );
-          },
-          Cancel: function() {
-            $( this ).dialog( "close" );
-          }
-        },
-        close: function() {
-        }
-      });
 
     refresh();
 	$("#time-range").focus();
@@ -700,19 +688,6 @@ body {
 
 	<div class="ui-widget">
 
-		<div id="report-dialog">
-			<div class="noprint">
-				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left;"><input type="text" id="from" /></div>
-				<br style="clear:both;"/>
-				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left;"><input type="text" id="to" /></div>
-				<br style="clear:both;"/>
-				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
-				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
-			</div>
-			<div id="reportContent" style="margin-top:20px;" >
-			</div>
-		</div>
-		
 		<div id="settings-dialog">
 
 			<p>
@@ -747,7 +722,7 @@ body {
 
 		</div>
 
-		<div class="links">
+		<div class="links noprint">
 			<div id="refresh" class="link">Refresh</div>
 			<div id="report" class="link">Report</div>
 			<div id="load" class="link">Import</div>
@@ -761,6 +736,19 @@ body {
 			<label id="date" for="time-range"></label> <input id="time-range" />
 			<div id="times"></div>
 			<div id="more">More</div>
+		</div>
+		
+		<div id="reporting" class="invisibleCompact">
+			<div class="noprint">
+				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left;"><input type="text" id="from" /></div>
+				<br style="clear:both;"/>
+				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left;"><input type="text" id="to" /></div>
+				<br style="clear:both;"/>
+				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
+				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
+			</div>
+			<div id="reportContent" style="margin-top:20px;" >
+			</div>
 		</div>
 
 	</div>
