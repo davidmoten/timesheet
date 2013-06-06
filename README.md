@@ -5,8 +5,9 @@ Time recording web application using Google Big Table storage on Google AppEngin
 
 Features are:
 
-* Very concise time entry.
-* Creates printable report on specified time range with signature blocks for yourself and supervisor.
+* Very concise time entry
+* Fast to use
+* Creates printable report on specified time range with signature blocks for yourself and supervisor
 * Enter your daily work periods using the numeric keypad as fast as you can type!
 * Asynchronous non-blocking ui
 
