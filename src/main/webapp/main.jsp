@@ -20,6 +20,7 @@ body {
 	margin-top: 2%;
 }
 
+
 .busy {
 	color: green;
 }
@@ -62,6 +63,7 @@ body {
 	clear: both;
 }
 
+
 #day {
 	width: 6.5em;
 	float: left;
@@ -101,6 +103,7 @@ body {
 
 .timesMsg {
 	float: left;
+}
 
 #time-range {
 	width: 7em;
@@ -111,13 +114,13 @@ body {
 	width: 20em;
 }
 
+#autoAdvanceTime {
+	width: 4em;
+}
+
 .help {
 	font-size: 62.5%;
 	margin-left: 2em;
-}
-
-#autoAdvanceTime {
-	width: 4em;
 }
 
 .reportDayOfWeek {
@@ -138,6 +141,10 @@ body {
 .reportTimeTo {
 	float: left;
 	width: 4em;
+}
+
+.spaceBelow {
+	margin-bottom:5em;
 }
 
 </style>
@@ -614,13 +621,13 @@ body {
 			  formattedDate = "&nbsp;";
 		  
 		  //class=reportDayOfWeek
-		  buffer += '<div style="float:left;width:12em;">'+dayOfWeek+'</div>';
-		  //add date, class=reportDate
-		  buffer += '<div style="float:left;width:8em;">'+ formattedDate + '</div>';
-		  //add from time, class="reportTimeFrom"
-		  buffer += '<div style="float:left;width:6em;">'+ t1 + '</div>';
-		  //add to time, class=reportTimeTo
-		  buffer += '<div style="float:left;width:6em;">'+ t2 + '</div>';
+		  buffer += '<div class="reportDayOfWeek">'+dayOfWeek+'</div>';
+		  //add date
+		  buffer += '<div class="reportDate">'+ formattedDate + '</div>';
+		  //add from time
+		  buffer += '<div class="reportTimeFrom">'+ t1 + '</div>';
+		  //add to time
+		  buffer += '<div class="reportTimeTo">'+ t2 + '</div>';
 		  dailyMinutes += durationMs/60000; 
   		  previousDate = date;
   	   }
@@ -630,12 +637,12 @@ body {
        }
     	
 	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Submitted by</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Signature</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Date</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Authorized by</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Signature</p>';
-	   buffer += '<p style="margin-bottom:3.5em;">Date</p>';
+	   buffer += '<p class="spaceBelow">Submitted by:</p>';
+	   buffer += '<p class="spaceBelow">Signature:</p>';
+	   buffer += '<p class="spaceBelow">Date:</p>';
+	   buffer += '<p class="spaceBelow">Authorized by:</p>';
+	   buffer += '<p class="spaceBelow">Signature:</p>';
+	   buffer += '<p class="spaceBelow">Date:</p>';
 	   $("#reportContent").append(buffer);
     }
     
@@ -679,7 +686,7 @@ body {
 				</div>
 			</div>
 		</div>
-
+		
 		<div id="settings-dialog">
 
 			<p>
@@ -695,10 +702,10 @@ body {
 			<p class="help">Used by auto-advance.</p>
 			<input type="checkbox" id="sunday" value="true">Sunday<br>
 			<input type="checkbox" id="monday" value="true">Monday<br>
-			<input type="checkbox" id="tuesday" value="true" checked="true">Tuesday<br>
-			<input type="checkbox" id="wednesday" value="true" checked="true">Wednesday<br>
-			<input type="checkbox" id="thursday" value="true" checked="true">Thursday<br>
-			<input type="checkbox" id="friday" value="true" checked="true">Friday<br>
+			<input type="checkbox" id="tuesday" value="true" checked="checked">Tuesday<br>
+			<input type="checkbox" id="wednesday" value="true" checked="checked">Wednesday<br>
+			<input type="checkbox" id="thursday" value="true" checked="checked">Thursday<br>
+			<input type="checkbox" id="friday" value="true" checked="checked">Friday<br>
 			<input type="checkbox" id="saturday" value="true">Saturday<br>
 
 			<p>
