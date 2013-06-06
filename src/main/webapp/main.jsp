@@ -570,9 +570,15 @@ body {
     	}
     });
 	
-	$("#from").datepicker();
+	$("#from").datepicker({
+	      changeMonth: true,
+	      changeYear: true
+	    });
     $("#from").datepicker("option","dateFormat","dd/mm/yy");
-	$("#to").datepicker();
+	$("#to").datepicker({
+	      changeMonth: true,
+	      changeYear: true
+	    });
     $("#to").datepicker("option","dateFormat","dd/mm/yy");
     $("#showReport").button().click(function () {
     	$("#reportWorking").removeClass("invisible");
@@ -673,7 +679,8 @@ body {
 	     buffer += '<div style="float:left; width:6em;">' + formatTime(dailyMinutes) + '</div>';
        }
     	
-	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '</p>';
+       var decimalHours = (totalMinutes/60.0).toFixed(2);
+	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '  ('+ decimalHours +' decimal)</p>';
 	   buffer += '<p class="spaceBelow">Submitted by:</p>';
 	   buffer += '<p class="spaceBelow">Signature:</p>';
 	   buffer += '<p class="spaceBelow">Date:</p>';
