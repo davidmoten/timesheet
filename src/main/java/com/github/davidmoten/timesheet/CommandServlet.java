@@ -71,7 +71,7 @@ public class CommandServlet extends HttpServlet {
 
 	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
 		int n = Integer.parseInt(req.getParameter("n"));
-		String json = db.getTimes(n);
+		String json = db.getTimesJson(n);
 		resp.setContentType("application/json");
 		try {
 			resp.getWriter().print(json);
@@ -83,7 +83,7 @@ public class CommandServlet extends HttpServlet {
 	private void getTimeRange(HttpServletRequest req, HttpServletResponse resp) {
 		Date start = parseDate(req.getParameter("start") + "-00-00");
 		Date finish = parseDate(req.getParameter("finish") + "-00-00");
-		String json = db.getTimeRange(start, new Date(finish.getTime()
+		String json = db.getTimeRangeJson(start, new Date(finish.getTime()
 				+ TimeUnit.DAYS.toMillis(1)));
 		resp.setContentType("application/json");
 		try {
@@ -126,6 +126,13 @@ public class CommandServlet extends HttpServlet {
 
 	}
 
+	/**
+	 * Returns the {@link Date} from a date string in format yyyy-MM-dd-HH-mm.
+	 * Date string is assumed to be in UTC time zone.
+	 * 
+	 * @param date
+	 * @return
+	 */
 	private Date parseDate(String date) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-Z");

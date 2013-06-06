@@ -29,6 +29,13 @@ import com.google.common.base.Preconditions;
  */
 public class Database {
 
+	/**
+	 * Saves a single period for a date to the database.
+	 * 
+	 * @param id
+	 * @param start
+	 * @param durationMs
+	 */
 	public void saveTime(String id, Date start, long durationMs) {
 		Preconditions.checkNotNull(id);
 		Preconditions.checkNotNull(start);
@@ -54,7 +61,14 @@ public class Database {
 
 	}
 
-	public String getTimes(int n) {
+	/**
+	 * Returns the entries where the startTime is > now - n days in JSON format.
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public String getTimesJson(int n) {
+		Preconditions.checkArgument(n >= 0, "n must be non-negative");
 		User user = getUser();
 		long t = toUtc(System.currentTimeMillis() - n * 24 * 3600 * 1000L);
 		Filter sinceFilter = new FilterPredicate("startTime",
@@ -69,7 +83,17 @@ public class Database {
 		return toJson(getEntities(q));
 	}
 
-	public String getTimeRange(Date start, Date finish) {
+	/**
+	 * Returns the entries where the startTime is >= start and < finish in JSON
+	 * format.
+	 * 
+	 * @param start
+	 * @param finish
+	 * @return
+	 */
+	public String getTimeRangeJson(Date start, Date finish) {
+		Preconditions.checkNotNull(start, "start cannot be null");
+		Preconditions.checkNotNull(finish, "finish cannot be null");
 		User user = getUser();
 		Filter afterFilter = new FilterPredicate("startTime",
 				FilterOperator.GREATER_THAN_OR_EQUAL, start);
@@ -85,7 +109,13 @@ public class Database {
 		return toJson(getEntities(q));
 	}
 
+	/**
+	 * Deletes all Entry objects in the database with entryId = id.
+	 * 
+	 * @param id
+	 */
 	public void deleteEntry(String id) {
+		Preconditions.checkNotNull(id);
 		Filter idFilter = new FilterPredicate("entryId", FilterOperator.EQUAL,
 				id);
 		Query q = new Query("Entry").setFilter(idFilter);
@@ -98,22 +128,47 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Get the current {@link User}.
+	 * 
+	 * @return
+	 */
 	private static User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
 	}
 
+	/**
+	 * Returns the epoch ms of the given time t where the time zone only is
+	 * switched to UTC.
+	 * 
+	 * @param t
+	 * @return
+	 */
 	private static long toUtc(long t) {
 		return t + TimeZone.getDefault().getOffset(t);
 	}
 
+	/**
+	 * Returns the results of a query as an {@link Iterable}<Entity>.
+	 * 
+	 * @param q
+	 * @return
+	 */
 	private static Iterable<Entity> getEntities(Query q) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		return datastore.prepare(q).asIterable();
 	}
 
-	private String toJson(Iterable<Entity> entities) {
+	/**
+	 * Returns a list of {@link Entity} in JSON format. Each Entity is assumed
+	 * to be of type Entry (as in time entry).
+	 * 
+	 * @param entities
+	 * @return
+	 */
+	private static String toJson(Iterable<Entity> entities) {
 		StringBuilder s = new StringBuilder();
 		s.append("{\n  \"entries\":[\n");
 		boolean first = true;

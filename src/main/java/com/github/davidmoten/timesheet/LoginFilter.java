@@ -24,6 +24,9 @@ public class LoginFilter implements Filter {
 
 	private final UserService userService;
 
+	/**
+	 * Constructor.
+	 */
 	public LoginFilter() {
 		userService = UserServiceFactory.getUserService();
 	}
