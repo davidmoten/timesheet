@@ -18,7 +18,7 @@ How to build and run locally
 -----------------------------
     mvn clean package appengine:devserver
 
-Browse to http://localhost:8080
+Browse to [http://localhost:8080](http://localhost:8080)
 
     
 
