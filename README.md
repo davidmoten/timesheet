@@ -1,7 +1,15 @@
 timesheet
 =========
 
-timesheet web application
+Time recording web application using Google Big Table storage on Google AppEngine. 
+
+Features are:
+
+* Very concise time entry.
+* Creates printable report on specified time range with signature blocks for yourself and supervisor.
+* Enter your daily work periods using the numeric keypad as fast as you can type!
+* Asynchronous non-blocking ui
+
 
 Try timesheet on Google AppEngine
 ----------------------------------
