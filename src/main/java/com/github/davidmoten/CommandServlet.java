@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -15,23 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.common.base.Preconditions;
-
+/**
+ * General purpose servlet. Doesn't really offer the richness of a formal REST
+ * interface but is ok for something simple.
+ * 
+ * @author dxm
+ * 
+ */
 public class CommandServlet extends HttpServlet {
 
 	private static final String COMMAND_SAVE_TIME = "saveTime";
@@ -42,8 +31,7 @@ public class CommandServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
-	// Testing url
-	// http://localhost:8080/command?command=saveTime&start=2013-05-11-21-55&durationMs=60000000&id=fred
+	private final Database db = new Database();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -62,10 +50,40 @@ public class CommandServlet extends HttpServlet {
 			throw new RuntimeException("unknown command: " + command);
 	}
 
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String command = req.getParameter("command");
+		if (COMMAND_LOAD_TIMES.equals(command))
+			loadTimes(req, resp);
+		else
+			throw new RuntimeException("unknown command: " + command);
+	}
+
+	private void saveTime(HttpServletRequest req) {
+		// Testing url
+		// http://localhost:8080/command?command=saveTime&start=2013-05-11-21-55&durationMs=60000000&id=fred
+		String id = req.getParameter("id");
+		Date start = parseDate(req.getParameter("start"));
+		long durationMs = Long.parseLong(req.getParameter("durationMs"));
+		db.saveTime(id, start, durationMs);
+	}
+
+	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
+		int n = Integer.parseInt(req.getParameter("n"));
+		String json = db.getTimes(n);
+		resp.setContentType("application/json");
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private void getTimeRange(HttpServletRequest req, HttpServletResponse resp) {
 		Date start = parseDate(req.getParameter("start") + "-00-00");
 		Date finish = parseDate(req.getParameter("finish") + "-00-00");
-		String json = getTimeRange(start, new Date(finish.getTime()
+		String json = db.getTimeRange(start, new Date(finish.getTime()
 				+ TimeUnit.DAYS.toMillis(1)));
 		resp.setContentType("application/json");
 		try {
@@ -75,41 +93,9 @@ public class CommandServlet extends HttpServlet {
 		}
 	}
 
-	private String getTimeRange(Date start, Date finish) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		Filter afterFilter = new FilterPredicate("startTime",
-				FilterOperator.GREATER_THAN_OR_EQUAL, start);
-		Filter beforeFilter = new FilterPredicate("startTime",
-				FilterOperator.LESS_THAN, finish);
-		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
-				user);
-		Filter userAndTimeFilter = CompositeFilterOperator.and(userFilter,
-				afterFilter, beforeFilter);
-		Query q = new Query("Entry").setFilter(userAndTimeFilter).addSort(
-				"startTime", SortDirection.ASCENDING);
-
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		PreparedQuery pq = datastore.prepare(q);
-
-		return toJson(pq.asIterable());
-
-	}
-
 	private void deleteEntry(HttpServletRequest req, HttpServletResponse resp) {
 		String id = req.getParameter("id");
-		deleteEntry(id);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String command = req.getParameter("command");
-		if (COMMAND_LOAD_TIMES.equals(command))
-			loadTimes(req, resp);
-		else
-			throw new RuntimeException("unknown command: " + command);
+		db.deleteEntry(id);
 	}
 
 	private void loadTimes(HttpServletRequest req, HttpServletResponse resp) {
@@ -125,7 +111,7 @@ public class CommandServlet extends HttpServlet {
 							"dd/MM/yy HH:mmZ");
 					Date t1 = df.parse(items[0] + " " + items[1] + "UTC");
 					Date t2 = df.parse(items[0] + " " + items[2] + "UTC");
-					saveTime(UUID.randomUUID().toString(), t1, t2.getTime()
+					db.saveTime(UUID.randomUUID().toString(), t1, t2.getTime()
 							- t1.getTime());
 					count++;
 				}
@@ -140,112 +126,6 @@ public class CommandServlet extends HttpServlet {
 
 	}
 
-	private void getTimes(HttpServletRequest req, HttpServletResponse resp) {
-		int n = Integer.parseInt(req.getParameter("n"));
-		String json = getTimes(n);
-		resp.setContentType("application/json");
-		try {
-			resp.getWriter().print(json);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private void deleteEntry(String id) {
-		Filter idFilter = new FilterPredicate("entryId", FilterOperator.EQUAL,
-				id);
-		Query q = new Query("Entry").setFilter(idFilter);
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		PreparedQuery pq = datastore.prepare(q);
-		System.out.println("deleting");
-		for (Entity entity : pq.asIterable()) {
-			datastore.delete(entity.getKey());
-			System.out.println("deleted " + entity.getKey());
-		}
-	}
-
-	private String getTimes(int n) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		long t = toUtc(System.currentTimeMillis() - n * 24 * 3600 * 1000L);
-		Filter sinceFilter = new FilterPredicate("startTime",
-				FilterOperator.GREATER_THAN_OR_EQUAL, new Date(t));
-		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
-				user);
-		Filter userAndSinceFilter = CompositeFilterOperator.and(userFilter,
-				sinceFilter);
-		Query q = new Query("Entry").setFilter(userAndSinceFilter).addSort(
-				"startTime", SortDirection.ASCENDING);
-
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		PreparedQuery pq = datastore.prepare(q);
-
-		return toJson(pq.asIterable());
-
-	}
-
-	private String toJson(Iterable<Entity> entities) {
-		StringBuilder s = new StringBuilder();
-		s.append("{\n  \"entries\":[\n");
-		boolean first = true;
-		for (Entity entity : entities) {
-			Date startTime = (Date) entity.getProperty("startTime");
-			Long durationMs = (Long) entity.getProperty("durationMs");
-			String id = (String) entity.getProperty("entryId");
-			SimpleDateFormat df = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:00.000'Z'");
-			df.setTimeZone(TimeZone.getTimeZone("UTC"));
-			if (!first)
-				s.append(",\n");
-
-			s.append("      {\"startTime\" : \"").append(df.format(startTime))
-					.append("\"").append(",");
-			s.append("\"durationMs\" : ").append("\"").append(durationMs)
-					.append("\"").append(",");
-			s.append("\"id\" : ").append("\"").append(id).append("\"")
-					.append("}");
-			first = false;
-		}
-		s.append("\n]}");
-		System.out.println(s.toString());
-		return s.toString();
-	}
-
-	private void saveTime(HttpServletRequest req) {
-		String id = req.getParameter("id");
-		Date start = parseDate(req.getParameter("start"));
-		long durationMs = Long.parseLong(req.getParameter("durationMs"));
-
-		saveTime(id, start, durationMs);
-
-	}
-
-	private void saveTime(String id, Date start, long durationMs) {
-		Preconditions.checkNotNull(id);
-		Preconditions.checkNotNull(start);
-
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-
-		// kind=db,name=schema,
-		Key timesheetKey = KeyFactory.createKey("Timesheet", "Timesheet");
-		// kind=table,entity=row
-		Entity entry = new Entity("Entry", timesheetKey);
-		entry.setProperty("user", user);
-		entry.setProperty("startTime", start);
-		entry.setProperty("durationMs", durationMs);
-		entry.setProperty("entryId", id);
-		// TODO add tags as a list
-
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		datastore.put(entry);
-		System.out.println("saved " + start + " " + durationMs);
-
-	}
-
 	private Date parseDate(String date) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-Z");
@@ -255,10 +135,6 @@ public class CommandServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
-	}
-
-	private static long toUtc(long t) {
-		return t + TimeZone.getDefault().getOffset(t);
 	}
 
 }

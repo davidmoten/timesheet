@@ -14,6 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+/**
+ * Ensures users are authenticated using Google Authentication.
+ * 
+ * @author dxm
+ * 
+ */
 public class LoginFilter implements Filter {
 
 	private final UserService userService;
