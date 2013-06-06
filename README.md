@@ -3,8 +3,12 @@ timesheet
 
 timesheet web application
 
-How to run 
---------------
+Try timesheet on Google AppEngine
+----------------------------------
+Go to http://its-showtime.appspot.com
+
+How to build and run locally
+-----------------------------
     mvn clean package appengine:devserver
 Browse to http://localhost:8080
 
@@ -16,3 +20,5 @@ Browse to file://<WORKSPACE>/timesheet/src/main/webapp/main.jsp?offline=true
 How to deploy to appengine
 ----------------------------
     mvn clean package appengine:update
+
+
