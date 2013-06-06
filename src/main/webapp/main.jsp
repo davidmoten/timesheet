@@ -724,7 +724,8 @@ body {
 		<div class="links">
 			<div id="refresh" class="link">Refresh</div>
 			<div id="report" class="link">Report</div>
-			<div id="load" class="link">Load</div>
+			<div id="load" class="link">Import</div>
+			<div id="load" class="link">Export</div>
 			<div id="settings" class="link">Settings</div>
 		</div>
 
