@@ -1,4 +1,4 @@
-package com.github.davidmoten;
+package com.github.davidmoten.timesheet;
 
 import java.io.IOException;
 

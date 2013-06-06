@@ -20,7 +20,6 @@ body {
 	margin-top: 2%;
 }
 
-
 .busy {
 	color: green;
 }
@@ -268,6 +267,18 @@ body {
 
     var offline = getURLParameter("offline") == "true";
     
+    var numRowsToDisplay = getURLParameter("n");
+    if (!isNumeric(numRowsToDisplay)) numRowsToDisplay = 100;
+    
+   	function isNumeric(n) {
+   	  return !isNaN(parseFloat(n)) && isFinite(n);
+   	}
+   	
+   	assert(isNumeric(10),"isNumeric test 1");
+   	assert(isNumeric(10.1),"isNumeric test 2");
+   	assert(!isNumeric("a"),"isNumeric test 3");
+   	assert(!isNumeric(null),"isNumeric test 4");
+    	
     var offlineTimes = new Object();
     offlineTimes.entries = 
 			  [  
@@ -301,7 +312,7 @@ body {
   		      url: "command",
   		      contentType: 'application/json',
   		      dataType: "json",
-  		      data: "command=getTimes&n=100",
+  		      data: "command=getTimes&n="+numRowsToDisplay,
   		      success: function (response) {
   		    	loadTimes(response);
   		        console.log("loaded");

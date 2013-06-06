@@ -1,4 +1,4 @@
-package com.github.davidmoten;
+package com.github.davidmoten.timesheet;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
