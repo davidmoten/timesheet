@@ -246,6 +246,15 @@ body {
     assert("11:20"==formatTime(680),"formatTime test 1");
     assert("00:01"==formatTime(1), "formatTime test 2");
     
+    function formatDateForUrl(d) {
+   	 var dd = d.getDate();
+   	 var mm = d.getMonth()+1; //January is 0!
+   	 var yyyy = d.getFullYear();
+   	 if(dd<10){dd='0'+dd} 
+   	 if(mm<10){mm='0'+mm} 
+   	 return yyyy + "-" + mm + "-" + dd;
+    }
+    
     function assert(b,msg){
     	if (!b) alert(msg + " failed");
     }
@@ -529,12 +538,15 @@ body {
     	if (offline) 
     		loadReport(offlineTimes);
     	else {
+			var dateStart = $("#from").datepicker("getDate");
+			var dateFinish = $("#to").datepicker("getDate");
+			
 	    	$.ajax({
 			      type: "GET",
 			      url: "command",
 			      contentType: 'application/json',
 			      dataType: "json",
-			      data: "command=getTimes&n=100",
+			      data: "command=getTimeRange&start=2013-04-01&finish=2013-05-31",
 			      success: function (response) {
 			    	loadReport(response);
 			        console.log("loaded");

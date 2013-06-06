@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -62,9 +63,38 @@ public class CommandServlet extends HttpServlet {
 	}
 
 	private void getTimeRange(HttpServletRequest req, HttpServletResponse resp) {
-		Date start = parseDate(req.getParameter("start"));
-		Date finish = parseDate(req.getParameter("finish"));
-		getTimes(100);
+		Date start = parseDate(req.getParameter("start") + "-00-00");
+		Date finish = parseDate(req.getParameter("finish") + "-00-00");
+		String json = getTimeRange(start, new Date(finish.getTime()
+				+ TimeUnit.DAYS.toMillis(1)));
+		resp.setContentType("application/json");
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String getTimeRange(Date start, Date finish) {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		Filter afterFilter = new FilterPredicate("startTime",
+				FilterOperator.GREATER_THAN_OR_EQUAL, start);
+		Filter beforeFilter = new FilterPredicate("startTime",
+				FilterOperator.LESS_THAN, finish);
+		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
+				user);
+		Filter userAndTimeFilter = CompositeFilterOperator.and(userFilter,
+				afterFilter, beforeFilter);
+		Query q = new Query("Entry").setFilter(userAndTimeFilter).addSort(
+				"startTime", SortDirection.ASCENDING);
+
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		PreparedQuery pq = datastore.prepare(q);
+
+		return toJson(pq.asIterable());
+
 	}
 
 	private void deleteEntry(HttpServletRequest req, HttpServletResponse resp) {
@@ -152,10 +182,15 @@ public class CommandServlet extends HttpServlet {
 				.getDatastoreService();
 		PreparedQuery pq = datastore.prepare(q);
 
+		return toJson(pq.asIterable());
+
+	}
+
+	private String toJson(Iterable<Entity> entities) {
 		StringBuilder s = new StringBuilder();
 		s.append("{\n  \"entries\":[\n");
 		boolean first = true;
-		for (Entity entity : pq.asIterable()) {
+		for (Entity entity : entities) {
 			Date startTime = (Date) entity.getProperty("startTime");
 			Long durationMs = (Long) entity.getProperty("durationMs");
 			String id = (String) entity.getProperty("entryId");
@@ -176,7 +211,6 @@ public class CommandServlet extends HttpServlet {
 		s.append("\n]}");
 		System.out.println(s.toString());
 		return s.toString();
-
 	}
 
 	private void saveTime(HttpServletRequest req) {
