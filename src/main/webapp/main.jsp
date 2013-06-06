@@ -554,8 +554,20 @@ body {
 	
 	$("#reportLink")
     .click(function() {
-      $( "#reporting" ).removeClass("invisibleCompact");
-      $("#main").addClass("invisibleCompact");
+		hideAll();
+    	$( "#reporting" ).removeClass("invisibleCompact");
+    	//default from and to dates to the 1st to end of previous month
+    	if ($("#from").val().length==0) {
+    		var date = new Date();
+    		date.setDate(1);
+    		date.setMonth(date.getMonth()-1);
+    		$("#from").val(formattedDate(date));
+    	}
+    	if ($("#to").val().length==0) {
+    		var date = new Date();
+    		date.setDate(0);
+    		$("#to").val(formattedDate(date));
+    	}
     });
 	
 	$("#from").datepicker();
@@ -571,6 +583,10 @@ body {
     	else {
 			var dateStart = $("#from").datepicker("getDate");
 			var dateFinish = $("#to").datepicker("getDate");
+			if (dateStart == null)
+				dateStart = new Date(1000,1,1,1,1,1,1);
+			if (dateFinish == null)
+				dateFinish = new Date(3000,1,1,1,1,1,1)
 			var startParam = formatDateForUrl(dateStart);
 			var finishParam = formatDateForUrl(dateFinish);
 			
