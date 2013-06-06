@@ -367,7 +367,7 @@ body {
 		
 		var t1 = hh1 + ":" + mm1;
 		var t2 = hh2 + ":" + mm2;
-		var date = theDate;
+		var date =new Date(theDate.getTime());
 		var rowId = guid();
 		var durationMs = (parseInt(hh2)*60+parseInt(mm2)-(parseInt(hh1)*60+parseInt(mm1)))*60000;
 		
@@ -391,10 +391,10 @@ body {
 	    	} else {
 	    		var startTime = date.getFullYear() + 
 	    					"-" + twoDigits(date.getMonth()+1) +
-	    					"-" + twoDigits(date.getDay()) + 
+	    					"-" + twoDigits(date.getDate()) + 
 	    					"-" + hh1 + 
 	    					"-" + mm1
-	    					
+	    		console.log("saving startTime="+ startTime);	
 	    		var parameters = "command=saveTime&start="+startTime + "&durationMs="+durationMs + "&id="+rowId;
 	    		$.ajax({
 	    		      type: "GET",
