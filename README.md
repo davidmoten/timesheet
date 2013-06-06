@@ -32,6 +32,6 @@ Open this file with your browser (and add the offline parameter):
 
 How to deploy to appengine
 ----------------------------
-    mvn clean package appengine:update
+    mvn clean package appengine:update -Dappengine.app.name=<YOUR_APP_NAME>
 
 

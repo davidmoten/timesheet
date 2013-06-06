@@ -6,11 +6,13 @@
     <version>1.0-SNAPSHOT</version>
 
     <groupId>com.github.davidmoten</groupId>
-    <artifactId>its-showtime</artifactId>
+    <artifactId>timesheet</artifactId>
 
 	<name>${project.artifactId}</name>
+	<description>Time recording web application designed for deployment to Google AppEngine.</description>
 
     <properties>
+        <appengine.app.name>its-showtime</appengine.app.name>
         <appengine.app.version>1</appengine.app.version>
         <appengine.target.version>1.8.0</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,6 +35,11 @@
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
+        </dependency>
+        <dependency>
+        	<groupId>com.google.guava</groupId>
+        	<artifactId>guava</artifactId>
+        	<version>14.0.1</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -60,11 +67,7 @@
             <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-        	<groupId>com.google.guava</groupId>
-        	<artifactId>guava</artifactId>
-        	<version>14.0.1</version>
-        </dependency>
+        
     </dependencies>
 
     <build>
