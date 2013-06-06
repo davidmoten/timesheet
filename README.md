@@ -11,7 +11,7 @@ Features are:
 * Enter your daily work periods using the numeric keypad as fast as you can type!
 * Asynchronous non-blocking ui
 
-Try timesheet on Google AppEngine
+Try it on Google AppEngine
 ----------------------------------
 Go to http://its-showtime.appspot.com
 
