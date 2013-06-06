@@ -669,10 +669,10 @@ body {
 
 		<div id="report-dialog">
 			<div>
-				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left"><input type="text" id="from" /></div>
-				<br style="clear:both"/>
-				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left"><input type="text" id="to" /></div>
-				<br style="clear:both"/>
+				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left;"><input type="text" id="from" /></div>
+				<br style="clear:both;"/>
+				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left;"><input type="text" id="to" /></div>
+				<br style="clear:both;"/>
 				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
 				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
 				<div id="reportContent" style="margin-top:20px;" class="print" >
@@ -709,6 +709,8 @@ body {
 				in the time field. To specify a standard day of 08:30 to 12:30 then
 				back working between 13:00 and 17:30, enter '08301230 13001730' in
 				this field.</p>
+			<p>Number of days to display<input id="numberDays" value="100"/></p>
+			<p class="help">The number of days back in time from now that will be displayed in the list of times on the entry view.</p>
 
 		</div>
 
