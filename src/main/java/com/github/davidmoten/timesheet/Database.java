@@ -9,7 +9,6 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -44,7 +43,9 @@ public class Database {
 		entry.setProperty("startTime", start);
 		entry.setProperty("durationMs", durationMs);
 		entry.setProperty("entryId", id);
-		// TODO add tags as a list
+
+		// TODO allow addition of tags to an entry which might then be the basis
+		// of queries in reports.
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -65,8 +66,7 @@ public class Database {
 		Query q = new Query("Entry").setFilter(userAndSinceFilter).addSort(
 				"startTime", SortDirection.ASCENDING);
 
-		return toJson(prepare(q).asIterable());
-
+		return toJson(getEntities(q));
 	}
 
 	public String getTimeRange(Date start, Date finish) {
@@ -82,8 +82,7 @@ public class Database {
 		Query q = new Query("Entry").setFilter(userAndTimeFilter).addSort(
 				"startTime", SortDirection.ASCENDING);
 
-		return toJson(prepare(q).asIterable());
-
+		return toJson(getEntities(q));
 	}
 
 	public void deleteEntry(String id) {
@@ -92,9 +91,8 @@ public class Database {
 		Query q = new Query("Entry").setFilter(idFilter);
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		PreparedQuery pq = datastore.prepare(q);
 		System.out.println("deleting");
-		for (Entity entity : pq.asIterable()) {
+		for (Entity entity : getEntities(q)) {
 			datastore.delete(entity.getKey());
 			System.out.println("deleted " + entity.getKey());
 		}
@@ -109,10 +107,10 @@ public class Database {
 		return t + TimeZone.getDefault().getOffset(t);
 	}
 
-	private static PreparedQuery prepare(Query q) {
+	private static Iterable<Entity> getEntities(Query q) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		return datastore.prepare(q);
+		return datastore.prepare(q).asIterable();
 	}
 
 	private String toJson(Iterable<Entity> entities) {

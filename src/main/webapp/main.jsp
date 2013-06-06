@@ -752,8 +752,5 @@ body {
 
 	</div>
 
-	<!--  speed up load time for delete.png because load is initiated by jquery -->
-	<img src="image/delete.png" class="invisible"/>
-
 </body>
 </html>
