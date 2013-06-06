@@ -25,7 +25,9 @@ Browse to [http://localhost:8080](http://localhost:8080)
 How to run offline (rapid dev of html/js)
 ------------------------------------------
 
-Browse to file://&lt;WORKSPACE&gt;/timesheet/src/main/webapp/main.jsp?offline=true
+Open this file with your browser (and add the offline parameter):
+
+    timesheet/src/main/webapp/main.jsp?offline=true
 
 How to deploy to appengine
 ----------------------------
