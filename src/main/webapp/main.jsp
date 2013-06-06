@@ -5,14 +5,22 @@
 <meta charset="utf-8" />
 <title>Timesheet</title>
 
-<link rel="stylesheet"
+<link rel="stylesheet" media="all"
 	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script src="jquery.sortElements.js"></script>
 <script src="jquery.printElement.js"></script>
-<style media="screen" type="text/css">
+<style type="text/css">
+
+@media print 
+{
+    .noprint 
+    {
+        display:none;
+    }
+}
 
 body {
 	font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana",
@@ -146,6 +154,10 @@ body {
 
 .spaceBelow {
 	margin-bottom:5em;
+}
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
 }
 
 </style>
@@ -661,12 +673,13 @@ body {
     
     $( "#report-dialog" ).dialog({
         autoOpen: false,
-        height: $(window).height()-50,
-        width: "80%",
+        dialogClass: "no-close",
+        height: $(window).height(),
+        width: "100%",
         modal: true,
         buttons: {
           "Print": function() {
-			  $('#reportContent').printElement();        	  
+			  $('#report-dialog').printElement();        	  
               $( this ).dialog( "close" );
           },
           Cancel: function() {
@@ -688,15 +701,15 @@ body {
 	<div class="ui-widget">
 
 		<div id="report-dialog">
-			<div>
+			<div class="noprint">
 				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left;"><input type="text" id="from" /></div>
 				<br style="clear:both;"/>
 				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left;"><input type="text" id="to" /></div>
 				<br style="clear:both;"/>
 				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
 				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
-				<div id="reportContent" style="margin-top:20px;" class="print" >
-				</div>
+			</div>
+			<div id="reportContent" style="margin-top:20px;" >
 			</div>
 		</div>
 		
