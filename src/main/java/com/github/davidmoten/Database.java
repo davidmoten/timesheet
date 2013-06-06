@@ -21,6 +21,13 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Preconditions;
 
+/**
+ * Encapsulates database access. GoogleAppEngine (BigTable) used for
+ * persistence.
+ * 
+ * @author dxm
+ * 
+ */
 public class Database {
 
 	public void saveTime(String id, Date start, long durationMs) {
