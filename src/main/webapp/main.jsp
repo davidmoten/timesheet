@@ -7,18 +7,17 @@
 
 <link rel="stylesheet" media="all"
 	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script src="jquery.sortElements.js"></script>
 <style type="text/css">
-
-@media print 
-{
-    .noprint 
-    {
-        display:none;
-    }
+@media print {
+	.noprint {
+		display: none;
+	}
 }
 
 body {
@@ -42,7 +41,7 @@ body {
 }
 
 .invisibleCompact {
-	display:none;
+	display: none;
 }
 
 .invalid {
@@ -74,7 +73,6 @@ body {
 #main {
 	clear: both;
 }
-
 
 #day {
 	width: 6.5em;
@@ -156,13 +154,12 @@ body {
 }
 
 .spaceBelow {
-	margin-bottom:5em;
+	margin-bottom: 5em;
 }
 
 .no-close .ui-dialog-titlebar-close {
-  display: none;
+	display: none;
 }
-
 </style>
 <script>
   $(function() {
@@ -310,10 +307,18 @@ body {
 	            {"startTime" : "2013-05-31T13:00:00.000Z","durationMs" : "16200000"}	
 		       ];
     
+    function hideAll() {
+        $("#main").addClass("invisibleCompact");
+        $("#reporting").addClass("invisibleCompact");
+        $("#importing").addClass("invisibleCompact");
+        $("#exporting").addClass("invisibleCompact");
+        $("#settings").addClass("invisibleCompact");
+    }
+    
     function refresh() {
         $("#working").removeClass("invisible");
+        hideAll();
         $("#main").removeClass("invisibleCompact");
-        $("#reporting").addClass("invisibleCompact");
 		$("#times").empty();
 		if (offline) {
         	setTimeout(function () {
@@ -375,7 +380,7 @@ body {
     assert("01" == twoDigits(1),"twoDigits test 1");
     assert("23" == twoDigits(23),"twoDigits test 2");
     
-    $("#refresh").click(refresh);
+    $("#refreshLink").click(refresh);
     
     function rowReady(rowId) {
     	$("#msg"+rowId).html("");
@@ -535,34 +540,19 @@ body {
 	}
 	});
 
-	$( "#settings-dialog" ).dialog({
-      autoOpen: false,
-      height: $(window).height()-50,
-      width: "80%",
-      modal: true,
-      buttons: {
-        "Ok": function() {
-            $( this ).dialog( "close" );
-        },
-        Cancel: function() {
-          $( this ).dialog( "close" );
-        }
-      },
-      close: function() {
-      }
-    });
 
-	$("#settings")
+	$("#settingsLink")
       .click(function() {
-        $( "#settings-dialog" ).dialog( "open" );
+    	hideAll();
+        $( "#settings" ).removeClass( "invisibleCompact" );
       });
 	
-	$("#load")
+	$("#loadLink")
 	  .click(function(){
 		 document.location.href='load'; 
 	  });
 	
-	$("#report")
+	$("#reportLink")
     .click(function() {
       $( "#reporting" ).removeClass("invisibleCompact");
       $("#main").addClass("invisibleCompact");
@@ -687,7 +677,46 @@ body {
 
 	<div class="ui-widget">
 
-		<div id="settings-dialog">
+
+		<div class="links noprint">
+			<div id="refreshLink" class="link">Time</div>
+			<div id="reportLink" class="link">Report</div>
+			<div id="loadLink" class="link">Import</div>
+			<div id="exportLink" class="link">Export</div>
+			<div id="settingsLink" class="link">Settings</div>
+		</div>
+
+		<div id="main">
+			<img id="working" class="invisible" src="image/spinner.gif" /><br />
+			<div id="day"></div>
+			<label id="date" for="time-range"></label> <input id="time-range" />
+			<div id="times"></div>
+			<div id="more">More</div>
+		</div>
+
+		<div id="reporting" class="invisibleCompact">
+			<div class="noprint">
+				<div style="float: left; width: 4em; margin-top: 3px;">From</div>
+				<div style="float: left;">
+					<input type="text" id="from" />
+				</div>
+				<br style="clear: both;" />
+				<div style="float: left; width: 4em; margin-top: 3px;">To</div>
+				<div style="float: left;">
+					<input type="text" id="to" />
+				</div>
+				<br style="clear: both;" />
+				<div id="showReport" style="margin-top: 10px; float: left;">Show
+					report</div>
+				<div style="float: left;">
+					<img id="reportWorking" class="invisible" src="image/spinner.gif" />
+				</div>
+				<br style="clear: both;" />
+			</div>
+			<div id="reportContent" style="margin-top: 20px;"></div>
+		</div>
+
+		<div id="settings" class="invisibleCompact">
 
 			<p>
 				Auto-advance to next day after time (HHMM):&nbsp;<input
@@ -716,38 +745,14 @@ body {
 				in the time field. To specify a standard day of 08:30 to 12:30 then
 				back working between 13:00 and 17:30, enter '08301230 13001730' in
 				this field.</p>
-			<p>Number of days to display<input id="numberDays" value="100"/></p>
-			<p class="help">The number of days back in time from now that will be displayed in the list of times on the entry view.</p>
-
-		</div>
-
-		<div class="links noprint">
-			<div id="refresh" class="link">Refresh</div>
-			<div id="report" class="link">Report</div>
-			<div id="load" class="link">Import</div>
-			<div id="load" class="link">Export</div>
-			<div id="settings" class="link">Settings</div>
-		</div>
-
-		<div id="main">
-			<img id="working" class="invisible" src="image/spinner.gif" /><br />
-			<div id="day"></div>
-			<label id="date" for="time-range"></label> <input id="time-range" />
-			<div id="times"></div>
-			<div id="more">More</div>
-		</div>
-		
-		<div id="reporting" class="invisibleCompact">
-			<div class="noprint">
-				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left;"><input type="text" id="from" /></div>
-				<br style="clear:both;"/>
-				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left;"><input type="text" id="to" /></div>
-				<br style="clear:both;"/>
-				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
-				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
-			</div>
-			<div id="reportContent" style="margin-top:20px;" >
-			</div>
+			<p>
+				Number of days to display<input id="numberDays" value="100" />
+			</p>
+			<p class="help">The number of days back in time from now that
+				will be displayed in the list of times on the entry view.</p>
+			<p>
+				Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
+			<p class="help">This value will be placed in the 'Submitted by' section of the report.</p>
 		</div>
 
 	</div>
