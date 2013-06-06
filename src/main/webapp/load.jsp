@@ -1,6 +1,6 @@
 <html>
 <head>
-
+<title>Import</title>
 <style media="screen" type="text/css">
 
 .boxSizingBorder {
@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-<h3>Load times</h3>
+<h3>Import</h3>
 <form action="command?command=loadTimes" method="post">
 <p>Format to submit times is one time range per line of this format:</p>
 <p style="font:monospace;font-size:75%;">dd/mm/yy&lt;TAB&gt;HH:mm&lt;TAB&gt;HH:mm</p>
