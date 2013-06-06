@@ -10,7 +10,6 @@ Features are:
 * Enter your daily work periods using the numeric keypad as fast as you can type!
 * Asynchronous non-blocking ui
 
-
 Try timesheet on Google AppEngine
 ----------------------------------
 Go to http://its-showtime.appspot.com
@@ -18,7 +17,9 @@ Go to http://its-showtime.appspot.com
 How to build and run locally
 -----------------------------
     mvn clean package appengine:devserver
-Browse to http://localhost:8080
+
+Browse 
+    http://localhost:8080
 
 How to run offline (rapid dev of html/js)
 ------------------------------------------
