@@ -9,7 +9,9 @@
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="jquery.sortElements.js"></script>
+<script src="jquery.printElement.js"></script>
 <style media="screen" type="text/css">
+
 body {
 	font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana",
 		"sans-serif";
@@ -99,9 +101,6 @@ body {
 
 .timesMsg {
 	float: left;
-	10
-	em;
-}
 
 #time-range {
 	width: 7em;
@@ -120,6 +119,27 @@ body {
 #autoAdvanceTime {
 	width: 4em;
 }
+
+.reportDayOfWeek {
+	float: left;
+	width: 12em;
+}
+
+.reportDate {
+	float: left;
+	width: 12em;
+}
+
+.reportTimeFrom {
+	float: left;
+	width: 4em;
+}
+
+.reportTimeTo {
+	float: left;
+	width: 4em;
+}
+
 </style>
 <script>
   $(function() {
@@ -136,6 +156,20 @@ body {
 	weekday[4]="Thursday";
 	weekday[5]="Friday";
 	weekday[6]="Saturday";
+	
+	var months=new Array(12);
+	months[0]="Jan";
+	months[1]="Feb";
+	months[2]="Mar";
+	months[3]="Apr";
+	months[4]="May";
+	months[5]="Jun";
+	months[6]="Jul";
+	months[7]="Aug";
+	months[8]="Sep";
+	months[9]="Oct";
+	months[10]="Nov";
+	months[11]="Dec";
 
     var settings={};
     settings.moveToNextWorkingDayAfterTime="15:00"
@@ -377,6 +411,7 @@ body {
 			'<br style="clear:both;"/>'+			
 			'</div>'
 			);
+ 	   
 	   //define delete action
 	   $("#delete"+rowId).click(function (){
 		   var answer = confirm("Are you sure you want to delete this row?");
@@ -479,6 +514,130 @@ body {
 	  .click(function(){
 		 document.location.href='load'; 
 	  });
+	
+	$("#report")
+    .click(function() {
+      $( "#report-dialog" ).dialog( "open" );
+    });
+	
+	$("#from").datepicker();
+    $("#from").datepicker("option","dateFormat","dd/mm/yy");
+	$("#to").datepicker();
+    $("#to").datepicker("option","dateFormat","dd/mm/yy");
+    $("#showReport").button().click(function () {
+
+    	if (offline) 
+    		loadReport(offlineTimes);
+    	else {
+	    	$.ajax({
+			      type: "GET",
+			      url: "command",
+			      contentType: 'application/json',
+			      dataType: "json",
+			      data: "command=getTimes&n=100",
+			      success: function (response) {
+			    	loadReport(response);
+			        console.log("loaded");
+			        sortRows();
+	              $("#working").toggleClass("invisible");
+			      },
+			      error: function (xhr, ajaxOptions, thrownError) {
+			        alert("could not load times due to " + xhr.status  + ","+ thrownError);
+			      }
+			    });
+    	}
+    });
+    
+    function loadReport(times) {
+   		$("#reportContent").empty().append("<h3>Timesheet</h3>");
+   		
+   		var buffer = "";
+		var previousDate = null;    	
+		var dailyMinutes = 0;
+		var totalMinutes = 0;
+    	for (i=0;i<times.entries.length;i++) {
+  		  var entry = times.entries[i];
+  		  var year = parseInt(entry.startTime.substring(0,4));
+  		  var month = parseInt(entry.startTime.substring(5,7));
+  		  var day = parseInt(entry.startTime.substring(8,10));
+  		  var date = new Date(year,month-1,day,0,0,0);
+  		  var hh1 = parseInt(entry.startTime.substring(11,13));
+  		  var mm1 = parseInt(entry.startTime.substring(14,16));
+  		  var durationMs = parseInt(entry.durationMs);
+  		  var startMinutes = hh1*60 + mm1;
+  		  var finishMinutes = startMinutes + durationMs/60000;
+  		  totalMinutes+=finishMinutes - startMinutes;
+  		  var t1 = formatTime(startMinutes);
+  		  var t2 = formatTime(finishMinutes);
+  		  var rowId = entry.id;
+  		  var isNewDate = previousDate==null || date.getTime()!=previousDate.getTime(); 
+		  if (isNewDate && previousDate !=null) {
+ 			  //add total to previous entry
+ 			  buffer += '<div style="float:left; width:6em;">' + formatTime(dailyMinutes) + '</div>';
+ 			  //add br
+ 			  buffer += '<br style="clear:both"/>';
+ 			  $("#reportContent").append(buffer);
+ 			  buffer = "";
+ 			  dailyMinutes = 0;
+		  } else {
+			  buffer +=  '<br style="clear:both"/>';
+		  }
+		  //add Day of week
+		  var dayOfWeek;
+		  if (isNewDate)
+			  dayOfWeek = weekday[theDate.getDay()];
+		  else 
+			  dayOfWeek = "&nbsp;";
+		  
+		  var formattedDate;
+		  if (isNewDate)
+			  formattedDate = day + ' ' + months[month-1] + ' ' + year;
+		  else 
+			  formattedDate = "&nbsp;";
+		  
+		  //class=reportDayOfWeek
+		  buffer += '<div style="float:left;width:12em;">'+dayOfWeek+'</div>';
+		  //add date, class=reportDate
+		  buffer += '<div style="float:left;width:8em;">'+ formattedDate + '</div>';
+		  //add from time, class="reportTimeFrom"
+		  buffer += '<div style="float:left;width:6em;">'+ t1 + '</div>';
+		  //add to time, class=reportTimeTo
+		  buffer += '<div style="float:left;width:6em;">'+ t2 + '</div>';
+		  dailyMinutes += durationMs/60000; 
+  		  previousDate = date;
+  	   }
+       if (dailyMinutes >0) {
+         //add total to previous entry
+	     buffer += '<div style="float:left; width:6em;">' + formatTime(dailyMinutes) + '</div>';
+       }
+    	
+	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Submitted by</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Signature</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Date</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Authorized by</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Signature</p>';
+	   buffer += '<p style="margin-bottom:3.5em;">Date</p>';
+	   $("#reportContent").append(buffer);
+    }
+    
+    $( "#report-dialog" ).dialog({
+        autoOpen: false,
+        height: $(window).height()-50,
+        width: "80%",
+        modal: true,
+        buttons: {
+          "Print": function() {
+			  $('#reportContent').printElement();        	  
+              $( this ).dialog( "close" );
+          },
+          Cancel: function() {
+            $( this ).dialog( "close" );
+          }
+        },
+        close: function() {
+        }
+      });
 
     refresh();
 	$("#time-range").focus();
@@ -489,6 +648,18 @@ body {
 <body>
 
 	<div class="ui-widget">
+
+		<div id="report-dialog">
+			<div>
+				<div style="float:left;width:4em;margin-top:3px;">From</div><div style="float:left"><input type="text" id="from" /></div>
+				<br style="clear:both"/>
+				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left"><input type="text" id="to" /></div>
+				<br style="clear:both"/>
+				<div id="showReport" style="margin-top:10px;">Show report</div>
+				<div id="reportContent" style="margin-top:20px;" class="print" >
+				</div>
+			</div>
+		</div>
 
 		<div id="settings-dialog">
 
