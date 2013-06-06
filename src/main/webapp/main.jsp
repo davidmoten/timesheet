@@ -276,7 +276,7 @@ body {
 		       ];
     
     function refresh() {
-        $("#working").toggleClass("invisible");
+        $("#working").removeClass("invisible");
 		$("#times").empty();
 		if (offline) {
         	setTimeout(function () {
@@ -286,7 +286,7 @@ body {
 				  submitTime("08001300");
 				  submitTime("14001645");
 				  sortRows();
-	              $("#working").toggleClass("invisible");
+	              $("#working").addClass("invisible");
 		  	},1000);
 		} else {
 			$.ajax({
@@ -299,10 +299,11 @@ body {
   		    	loadTimes(response);
   		        console.log("loaded");
   		        sortRows();
-                $("#working").toggleClass("invisible");
+                $("#working").addClass("invisible");
   		      },
   		      error: function (xhr, ajaxOptions, thrownError) {
   		        alert("could not load times due to " + xhr.status  + ","+ thrownError);
+  		        $("#working").addClass("invisible");
   		      }
   		    });
 		}
@@ -534,9 +535,11 @@ body {
 	$("#to").datepicker();
     $("#to").datepicker("option","dateFormat","dd/mm/yy");
     $("#showReport").button().click(function () {
-
-    	if (offline) 
+    	$("#reportWorking").removeClass("invisible");
+    	if (offline) { 
     		loadReport(offlineTimes);
+    		$("#reportWorking").addClass("invisible");
+    	}
     	else {
 			var dateStart = $("#from").datepicker("getDate");
 			var dateFinish = $("#to").datepicker("getDate");
@@ -553,10 +556,11 @@ body {
 			    	loadReport(response);
 			        console.log("loaded");
 			        sortRows();
-	              $("#working").toggleClass("invisible");
+			        $("#reportWorking").addClass("invisible");
 			      },
 			      error: function (xhr, ajaxOptions, thrownError) {
 			        alert("could not load times due to " + xhr.status  + ","+ thrownError);
+			        $("#reportWorking").addClass("invisible");
 			      }
 			    });
     	}
@@ -599,7 +603,7 @@ body {
 		  //add Day of week
 		  var dayOfWeek;
 		  if (isNewDate)
-			  dayOfWeek = weekday[theDate.getDay()];
+			  dayOfWeek = weekday[date.getDay()];
 		  else 
 			  dayOfWeek = "&nbsp;";
 		  
@@ -669,7 +673,8 @@ body {
 				<br style="clear:both"/>
 				<div style="float:left;width:4em;margin-top:3px;">To</div><div style="float:left"><input type="text" id="to" /></div>
 				<br style="clear:both"/>
-				<div id="showReport" style="margin-top:10px;">Show report</div>
+				<div id="showReport" style="margin-top:10px;float:left;">Show report</div>
+				<div style="float:left;"><img id="reportWorking" class="invisible" src="image/spinner.gif" /></div><br style="clear:both;" />
 				<div id="reportContent" style="margin-top:20px;" class="print" >
 				</div>
 			</div>
