@@ -540,13 +540,15 @@ body {
     	else {
 			var dateStart = $("#from").datepicker("getDate");
 			var dateFinish = $("#to").datepicker("getDate");
+			var startParam = formatDateForUrl(dateStart);
+			var finishParam = formatDateForUrl(dateFinish);
 			
 	    	$.ajax({
 			      type: "GET",
 			      url: "command",
 			      contentType: 'application/json',
 			      dataType: "json",
-			      data: "command=getTimeRange&start=2013-04-01&finish=2013-05-31",
+			      data: "command=getTimeRange&start="+ startParam + "&finish="+ finishParam,
 			      success: function (response) {
 			    	loadReport(response);
 			        console.log("loaded");
