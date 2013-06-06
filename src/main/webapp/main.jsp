@@ -423,7 +423,7 @@ body {
 			'<div class="timesDate">'+ formattedDate(date) +'</div>'+ 
 			'<div class="timesFrom">'+ t1 + '</div>'+
 			'<div class="timesTo">'+ t2 + '</div>'+
-			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'">Delete</div></div>'+
+			'<div class="timesDelete"><div id="delete'+rowId+'" class="'+deleteClass+'"><img src="image/delete.png"></div></div>'+
 			'<div id="msg'+rowId+'" class="'+msgCls+' timesMsg">'+msg+'</div>'+
 			'<br style="clear:both;"/>'+			
 			'</div>'
