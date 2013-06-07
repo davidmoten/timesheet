@@ -28,6 +28,10 @@ body {
 	margin-top: 2%;
 }
 
+.bold {
+	font-weight:bold;
+}
+
 .busy {
 	color: green;
 }
@@ -338,12 +342,16 @@ body {
         $("#importing").addClass("invisibleCompact");
         $("#exporting").addClass("invisibleCompact");
         $("#settings").addClass("invisibleCompact");
+        $("#refreshLink").removeClass("bold");
+        $("#reportLink").removeClass("bold");
+        $("#settingsLink").removeClass("bold");
     }
     
     function refresh() {
         $("#working").removeClass("invisible");
         hideAll();
         $("#main").removeClass("invisibleCompact");
+        $("#refreshLink").addClass("bold");
 		$("#times").empty();
 		if (offline) {
         	setTimeout(function () {
@@ -569,10 +577,11 @@ body {
 	$("#settingsLink")
       .click(function() {
     	hideAll();
+    	$("#settingsLink").addClass("bold");
         $( "#settings" ).removeClass( "invisibleCompact" );
       });
 	
-	$("#loadLink")
+	$("#loadLink").button()
 	  .click(function(){
 		 document.location.href='load'; 
 	  });
@@ -580,6 +589,7 @@ body {
 	$("#reportLink")
     .click(function() {
 		hideAll();
+		$("#reportLink").addClass("bold");
     	$( "#reporting" ).removeClass("invisibleCompact");
     	//default from and to dates to the 1st to end of previous month
     	if ($("#from").val().length==0) {
@@ -719,7 +729,7 @@ body {
     	$("#help").toggleClass("invisibleCompact");
     });
     
-    $("#exportLink").click(function () {
+    $("#exportLink").button().click(function () {
     	window.location = "command?command=exportTimes";
     });
     
@@ -737,12 +747,11 @@ body {
 
 	<div class="ui-widget">
 
+		<div id="banner"><img src="image/banner.jpg"/></div>
 
 		<div class="links noprint">
-			<div id="refreshLink" class="link">Time</div>
+			<div id="refreshLink" class="link bold">Time</div>
 			<div id="reportLink" class="link">Report</div>
-			<div id="loadLink" class="link">Import</div>
-			<div id="exportLink" class="link">Export</div>
 			<div id="settingsLink" class="link">Settings</div>
 		</div>
 
@@ -825,6 +834,9 @@ body {
 			<p>
 				Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
 			<p class="help">This value will be placed in the 'Submitted by' section of the report.</p>
+			
+			<div id="loadLink">Import</div>
+			<div id="exportLink">Export</div>
 		</div>
 
 	</div>
