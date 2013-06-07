@@ -2,6 +2,7 @@ package com.github.davidmoten.timesheet;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -221,5 +222,45 @@ public class Database {
 			s.append(tf.format(finishTime));
 		}
 		return s.toString();
+	}
+
+	public void setSetting(String key, String value) {
+		User user = getUser();
+
+		Key timesheetKey = KeyFactory.createKey("Timesheet", "Timesheet");
+		// kind=table,entity=row
+		Entity setting = new Entity("Setting", timesheetKey);
+		setting.setProperty("user", user);
+		setting.setProperty("key", key);
+		setting.setProperty("value", value);
+
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		datastore.put(setting);
+		System.out.println("setSetting " + key + "=" + value);
+	}
+
+	public String getSetting(String key) {
+		User user = getUser();
+		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
+				user);
+		Filter keyFilter = new FilterPredicate("key", FilterOperator.EQUAL, key);
+		Filter userKeyFilter = CompositeFilterOperator.and(userFilter,
+				keyFilter);
+		Query q = new Query("Setting").setFilter(userKeyFilter);
+		Iterable<Entity> results = getEntities(q);
+		Iterator<Entity> it = results.iterator();
+		String result;
+		if (!it.hasNext())
+			result = "";
+		else {
+			String value = (String) it.next().getProperty("value");
+			if (value == null)
+				result = "";
+			else
+				result = value;
+		}
+		System.out.println("getSetting " + key + "=" + result);
+		return result;
 	}
 }

@@ -219,7 +219,7 @@ body {
 	months[11]="Dec";
 
     var settings={};
-    settings.moveToNextWorkingDayAfterTime="15:00"
+    settings.autoAdvanceTime="15:00"
     settings.workingDays=[2,3,4,5];
     settings.standardDay=["08301230","13001700"];
 
@@ -309,6 +309,10 @@ body {
     }
 
     var offline = getURLParameter("offline") == "true";
+    
+    settings.autoAdvanceTime = getSetting("autoAdvanceTime","15:00");
+    $("#autoAdvanceTime").val(settings.autoAdvanceTime);
+    console.log("autoAdvanceTime="+settings.autoAdvanceTime);
     
     var numRowsToDisplay = getURLParameter("n");
     if (!isNumeric(numRowsToDisplay)) numRowsToDisplay = 100;
@@ -444,7 +448,10 @@ body {
 	   	sortRows();
 	   	$("#time-range").val('');
 	
-	   	if (valid && (hh2+':'+mm2)>=settings.moveToNextWorkingDayAfterTime) {
+	   	if (valid &&
+	   			settings.autoAdvanceTime != null &&
+	   			settings.autoAdvanceTime != "" &&
+	   			(hh2+':'+mm2)>=settings.autoAdvanceTime) {
 	        nextDate();
 		 	while ($.inArray(theDate.getDay(),settings.workingDays)==-1)
 	          nextDate();
@@ -737,6 +744,48 @@ body {
     	window.print();
     });
     
+    function getSetting(key,defaultValue){
+    	var result;
+    	$.ajax({
+            type: "GET",
+            url:  "command",
+            data: "command=getSetting&key="+ key,
+            contentType: 'text/plain',
+		    dataType: "html",
+            async: false,
+            success : function(data) {
+                result = data;
+            },
+    		error: function (xhr, ajaxOptions, thrownError) {
+		        alert("could not get setting " + key + " due to " + xhr.status  + ","+ thrownError);
+		    }
+        });
+    	console.log("getSetting "+ key + "='" + result + "'");
+    	if (offline || result == '')
+    		return defaultValue;
+    	else 
+    		return result;
+    }
+    
+    function setSetting(key,val){
+    	$.ajax({
+            type: "GET",
+            url: "command",
+            data: "command=setSetting&key="+ key + "&value=" + val,
+            async: true,
+            success : function(data) {
+            },
+    		error: function (xhr, ajaxOptions, thrownError) {
+		        alert("could not set setting " + key + " due to " + xhr.status  + ","+ thrownError);
+		    }
+        });
+    }
+    
+    $("#autoAdvanceTime").blur(function () {
+    	setSetting("autoAdvanceTime",$("#autoAdvanceTime").val());
+    	settings.autoAdvanceTime = $("#autoAdvanceTime").val();
+    });
+    
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
@@ -841,7 +890,9 @@ body {
 			<p class="help">This value will be placed in the 'Submitted by' section of the report.</p>
 			
 			<div id="loadLink">Import</div>
+			<p class="help">Import tab delimited values in bulk.</p>
 			<div id="exportLink">Export</div>
+			<p class="help">Export all times from the database as tab delimited values.</p>
 		</div>
 
 	</div>

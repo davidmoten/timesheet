@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.base.Preconditions;
+
 /**
  * General purpose servlet. Doesn't really offer the richness of a formal REST
  * interface but is ok for something simple.
@@ -29,6 +31,8 @@ public class CommandServlet extends HttpServlet {
 	private static final Object COMMAND_DELETE = "delete";
 	private static final Object COMMAND_GET_TIME_RANGE = "getTimeRange";
 	private static final Object COMMAND_EXPORT_TIMES = "exportTimes";
+	private static final Object COMMAND_GET_SETTING = "getSetting";
+	private static final Object COMMAND_SET_SETTING = "setSetting";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -49,6 +53,10 @@ public class CommandServlet extends HttpServlet {
 			deleteEntry(req, resp);
 		else if (COMMAND_EXPORT_TIMES.equals(command))
 			exportTimes(req, resp);
+		else if (COMMAND_SET_SETTING.equals(command))
+			setSetting(req, resp);
+		else if (COMMAND_GET_SETTING.equals(command))
+			getSetting(req, resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
 	}
@@ -137,6 +145,25 @@ public class CommandServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private void setSetting(HttpServletRequest req, HttpServletResponse resp) {
+		String key = req.getParameter("key");
+		String value = req.getParameter("value");
+		Preconditions.checkNotNull(key, "key parameter must not be null");
+		Preconditions.checkNotNull(value, "value parameter must not be null");
+		db.setSetting(key, value);
+	}
+
+	private void getSetting(HttpServletRequest req, HttpServletResponse resp) {
+		String key = req.getParameter("key");
+		Preconditions.checkNotNull(key, "key parameter must not be null");
+		try {
+			resp.setContentType("text/plain");
+			resp.getWriter().print(db.getSetting(key));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
