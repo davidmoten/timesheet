@@ -733,6 +733,10 @@ body {
     	window.location = "command?command=exportTimes";
     });
     
+    $("#print").button().click(function() {
+    	window.print();
+    });
+    
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
@@ -789,7 +793,8 @@ body {
 				<br style="clear: both;" />
 				<div id="showReport" style="margin-top: 10px; float: left;">Show
 					report</div>
-				<div style="float: left;">
+				<div id="print" style="margin-left:2em; margin-top: 10px; float: left;">Print</div>
+				<div style="float: left;margin-left:1em;padding-top:15px;">
 					<img id="reportWorking" class="invisible" src="image/spinner.gif" />
 				</div>
 				<br style="clear: both;" />
