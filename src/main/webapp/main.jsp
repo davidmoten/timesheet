@@ -74,6 +74,8 @@ body {
 	clear: both;
 }
 
+
+
 #day {
 	width: 6.5em;
 	float: left;
@@ -84,6 +86,26 @@ body {
 	width: 7em;
 	float: left;
 	padding-top: 4px;
+}
+
+#entryHelp {
+	float:left;
+	padding-top:3px;
+	padding-left:10px;
+}
+
+#help {
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	padding-left:1em;
+	padding-right:1em;
+	font-size:80%;
+	background-color:buttonface;
+	width:50em;
+	max-width: 85%;
+	margin-bottom:0.5em;
+	border:thin solid;
+	border-color:gray;
 }
 
 .timesDay {
@@ -118,6 +140,7 @@ body {
 #time-range {
 	width: 7em;
 	margin-bottom: 10px;
+	float:left;
 }
 
 #standardDay {
@@ -692,6 +715,10 @@ body {
 	   $("#reportContent").append(buffer);
     }
 
+    $("#entryHelp").click(function () {
+    	$("#help").toggleClass("invisibleCompact");
+    });
+    
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
@@ -719,6 +746,18 @@ body {
 			<img id="working" class="invisible" src="image/spinner.gif" /><br />
 			<div id="day"></div>
 			<label id="date" for="time-range"></label> <input id="time-range" />
+			<div id="entryHelp"><img src="image/help.png"/></div> 
+			<br style="clear:both"/>
+			<div id="help" class="invisibleCompact">
+			    <p>The expected format is:</p>
+			    <p style="margin-left:2em;">HHMMHHMM</p>
+			    <p>For example, the work period 13:30-17:30 is entered:</p>
+			    <p style="margin-left:2em;">13301730</p>
+			    <p>Hit Enter to submit a value</p>
+			    <p>All times are in 24 hour clock.</p>
+				<p>Up-arrow = next date, Down-arrow = previous date</p>
+				<p>Type 's' to enter a standard day as defined in Settings</p>
+			</div>
 			<div id="times"></div>
 			<div id="more">More</div>
 		</div>
