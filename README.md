@@ -3,7 +3,7 @@ timesheet
 
 Time recording web application configured for deployment to Google AppEngine. 
 
-Status: *beta"
+Status: *beta*
 
 Features are:
 
