@@ -1,7 +1,7 @@
 timesheet
 =========
 
-Time recording web application using Google BigTable storage on Google AppEngine. 
+Time recording web application configured for deployment to Google AppEngine. 
 
 Features are:
 
