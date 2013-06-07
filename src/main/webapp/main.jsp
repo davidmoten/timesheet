@@ -233,8 +233,10 @@ body {
 	}
 
     function orderedFormat(date) {
-      return date.substring(6,8) + date.substring(3,5) + date.substring(0,2);
+      return date.substring(6,10) + date.substring(3,5) + date.substring(0,2);
     }
+    
+    assert("20120825"==orderedFormat("25/08/2012"), "orderedFormat unit test 1");
     
     function getURLParameter(name) {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
