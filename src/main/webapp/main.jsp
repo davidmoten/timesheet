@@ -100,7 +100,7 @@ body {
 	padding-left:1em;
 	padding-right:1em;
 	font-size:80%;
-	background-color:buttonface;
+	background-color:rgb(240,240,240);
 	width:50em;
 	max-width: 85%;
 	margin-bottom:0.5em;
