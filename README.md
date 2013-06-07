@@ -11,7 +11,8 @@ Features are:
 * Fast to use
 * Creates printable report on specified time range with signature blocks for yourself and supervisor
 * Enter your daily work periods using the numeric keypad as fast as you can type!
-* Asynchronous non-blocking ui
+* Asynchronous non-blocking ui using JQueryUI
+* Built and deployed with Maven
 
 Todo:
 
