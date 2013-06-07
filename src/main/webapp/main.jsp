@@ -24,8 +24,6 @@ body {
 	font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana",
 		"sans-serif";
 	font-size: 80%;
-	margin-left: 5%;
-	margin-top: 2%;
 }
 
 .bold {
@@ -78,7 +76,15 @@ body {
 	clear: both;
 }
 
+#nonBanner {
+	margin-left: 5%;
+	margin-top: 2%;
+}
 
+#banner {
+   margin-left: -8px;
+   margin-top: -8px;
+}
 
 #day {
 	width: 6.5em;
@@ -801,7 +807,7 @@ body {
 	<div class="ui-widget">
 
 		<div id="banner" class="noprint"><img src="image/banner.jpg"/></div>
-
+		<div id="nonBanner">
 		<div class="links noprint">
 			<div id="refreshLink" class="link bold">Time</div>
 			<div id="reportLink" class="link">Report</div>
@@ -895,6 +901,7 @@ body {
 			<p class="help">Export all times from the database as tab delimited values.</p>
 		</div>
 
+	</div>
 	</div>
 
 </body>
