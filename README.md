@@ -3,6 +3,8 @@ timesheet
 
 Time recording web application configured for deployment to Google AppEngine. 
 
+Status: *beta"
+
 Features are:
 
 * Very concise time entry
