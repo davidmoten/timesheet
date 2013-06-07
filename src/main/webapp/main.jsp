@@ -695,7 +695,7 @@ body {
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
-		numRowsToDisplay += 100;
+		numRowsToDisplay = parseInt(numRowsToDisplay) + 100;
 		refresh();
 	});
   });
