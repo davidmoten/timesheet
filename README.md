@@ -13,6 +13,11 @@ Features are:
 * Enter your daily work periods using the numeric keypad as fast as you can type!
 * Asynchronous non-blocking ui
 
+Todo:
+
+* persist and load user-specific settings
+
+
 <img src="https://raw.github.com/davidmoten/timesheet/master/src/docs/screen.png"/>
 
 Try it on Google AppEngine
