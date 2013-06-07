@@ -28,6 +28,7 @@ public class CommandServlet extends HttpServlet {
 	private static final String COMMAND_LOAD_TIMES = "loadTimes";
 	private static final Object COMMAND_DELETE = "delete";
 	private static final Object COMMAND_GET_TIME_RANGE = "getTimeRange";
+	private static final Object COMMAND_EXPORT_TIMES = "exportTimes";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -46,6 +47,8 @@ public class CommandServlet extends HttpServlet {
 			getTimeRange(req, resp);
 		else if (COMMAND_DELETE.equals(command))
 			deleteEntry(req, resp);
+		else if (COMMAND_EXPORT_TIMES.equals(command))
+			exportTimes(req, resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
 	}
@@ -96,6 +99,16 @@ public class CommandServlet extends HttpServlet {
 	private void deleteEntry(HttpServletRequest req, HttpServletResponse resp) {
 		String id = req.getParameter("id");
 		db.deleteEntry(id);
+	}
+
+	private void exportTimes(HttpServletRequest req, HttpServletResponse resp) {
+		String s = db.getTimesTabDelimited();
+		resp.setContentType("text/plain");
+		try {
+			resp.getWriter().print(s);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void loadTimes(HttpServletRequest req, HttpServletResponse resp) {

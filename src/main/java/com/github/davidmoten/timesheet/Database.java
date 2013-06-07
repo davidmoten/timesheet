@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
@@ -158,7 +159,8 @@ public class Database {
 	private static Iterable<Entity> getEntities(Query q) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		return datastore.prepare(q).asIterable();
+		FetchOptions options = FetchOptions.Builder.withChunkSize(1000);
+		return datastore.prepare(q).asIterable(options);
 	}
 
 	/**
@@ -192,6 +194,32 @@ public class Database {
 		}
 		s.append("\n]}");
 		System.out.println(s.toString());
+		return s.toString();
+	}
+
+	public String getTimesTabDelimited() {
+		User user = getUser();
+		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
+				user);
+		Query q = new Query("Entry").setFilter(userFilter).addSort("startTime",
+				SortDirection.ASCENDING);
+		StringBuilder s = new StringBuilder();
+		for (Entity entity : getEntities(q)) {
+			if (s.length() > 0)
+				s.append("\n");
+			Date startTime = (Date) entity.getProperty("startTime");
+			Long durationMs = (Long) entity.getProperty("durationMs");
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+			df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+			tf.setTimeZone(TimeZone.getTimeZone("UTC"));
+			s.append(df.format(startTime));
+			s.append("\t");
+			s.append(tf.format(startTime));
+			Date finishTime = new Date(startTime.getTime() + durationMs);
+			s.append("\t");
+			s.append(tf.format(finishTime));
+		}
 		return s.toString();
 	}
 }

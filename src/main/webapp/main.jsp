@@ -719,6 +719,10 @@ body {
     	$("#help").toggleClass("invisibleCompact");
     });
     
+    $("#exportLink").click(function () {
+    	window.location = "command?command=exportTimes";
+    });
+    
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
