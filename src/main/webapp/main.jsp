@@ -747,7 +747,7 @@ body {
 
 	<div class="ui-widget">
 
-		<div id="banner"><img src="image/banner.jpg"/></div>
+		<div id="banner" class="noprint"><img src="image/banner.jpg"/></div>
 
 		<div class="links noprint">
 			<div id="refreshLink" class="link bold">Time</div>
