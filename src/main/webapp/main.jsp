@@ -345,6 +345,23 @@ body {
     	settings.submittedBy = $("#submittedBy").val();
     });
     
+    settings.sunday = getSetting("sunday","true")=="false";
+    checkbox($("#sunday"),settings.sunday);
+    $("#sunday").change(function () {
+        var isChecked = $("#sunday").is(":checked");
+    	setSetting("sunday",isChecked);
+    	settings.sunday = isChecked;
+    });
+    
+
+    function checkbox(checkbox, isChecked) {
+        if (isChecked)
+            checkbox.attr('checked','checked');
+        else 
+            checkbox.removeAttr('checked');
+    }
+
+
     function isNumeric(n) {
    	  return !isNaN(parseFloat(n)) && isFinite(n);
    	}
