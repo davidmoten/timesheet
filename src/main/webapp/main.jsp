@@ -331,10 +331,14 @@ body {
     	settings.standardDay = $("#standardDay").val();
     });
     
-    var numRowsToDisplay = getURLParameter("n");
-    if (!isNumeric(numRowsToDisplay)) numRowsToDisplay = 100;
+    settings.numDaysToDisplay = parseInt(getSetting("numDaysToDisplay","100"));
+    $("#numDaysToDisplay").val(settings.numDaysToDisplay);
+    $("#numDaysToDisplay").blur(function () {
+        setSetting("numDaysToDisplay",$("#numDaysToDisplay").val());
+    	settings.numDaysToDisplay = parseInt($("#numDaysToDisplay").val());
+    });
     
-   	function isNumeric(n) {
+    function isNumeric(n) {
    	  return !isNaN(parseFloat(n)) && isFinite(n);
    	}
    	
@@ -390,7 +394,7 @@ body {
   		      url: "command",
   		      contentType: 'application/json',
   		      dataType: "json",
-  		      data: "command=getTimes&n="+numRowsToDisplay,
+  		      data: "command=getTimes&n="+settings.numDaysToDisplay,
   		      success: function (response) {
   		    	loadTimes(response);
   		        console.log("loaded");
@@ -802,7 +806,7 @@ body {
     refresh();
 	$("#time-range").focus();
 	$("#more").click(function () {
-		numRowsToDisplay = parseInt(numRowsToDisplay) + 100;
+		settings.numDaysToDisplay = parseInt(settings.numDaysToDisplay) + 100;
 		refresh();
 	});
   });
@@ -894,7 +898,7 @@ body {
 				back working between 13:00 and 17:30, enter '08301230 13001730' in
 				this field.</p>
 			<p>
-				Number of days to display<input id="numberDays" value="100" />
+				Number of days to display:&nbsp;<input id="numDaysToDisplay" value="100" />
 			</p>
 			<p class="help">The number of days back in time from now that
 				will be displayed in the list of times on the entry view.</p>
