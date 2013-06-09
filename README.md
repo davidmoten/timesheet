@@ -18,8 +18,11 @@ Todo:
 
 * persist and load user-specific settings
 
-
 <img src="https://raw.github.com/davidmoten/timesheet/master/src/docs/screen.png"/>
+
+Demonstration
+-------------------
+[Demo on Youtube](http://www.youtube.com/watch?v=RsRdYpR1FGU).
 
 Try it on Google AppEngine
 ----------------------------------
