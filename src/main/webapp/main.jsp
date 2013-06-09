@@ -337,6 +337,13 @@ body {
         setSetting("numDaysToDisplay",$("#numDaysToDisplay").val());
     	settings.numDaysToDisplay = parseInt($("#numDaysToDisplay").val());
     });
+
+    settings.submittedBy = getSetting("submittedBy","");
+    $("#submittedBy").val(settings.submittedBy);
+    $("#submittedBy").blur(function () {
+    	setSetting("submittedBy",$("#submittedBy").val());
+    	settings.submittedBy = $("#submittedBy").val();
+    });
     
     function isNumeric(n) {
    	  return !isNaN(parseFloat(n)) && isFinite(n);
