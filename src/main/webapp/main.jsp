@@ -225,9 +225,9 @@ body {
 	months[11]="Dec";
 
     var settings={};
-    settings.autoAdvanceTime="15:00"
-    settings.workingDays=[2,3,4,5];
-    settings.standardDay=["08301230","13001700"];
+//    settings.autoAdvanceTime="15:00"
+//    settings.standardDay="08301230 13001700";
+     settings.workingDays=[2,3,4,5];
 
 	var theDate = new Date();
 	theDate.setHours(0);
@@ -316,9 +316,20 @@ body {
 
     var offline = getURLParameter("offline") == "true";
     
+    //load settings and create onchange functions
     settings.autoAdvanceTime = getSetting("autoAdvanceTime","15:00");
     $("#autoAdvanceTime").val(settings.autoAdvanceTime);
-    console.log("autoAdvanceTime="+settings.autoAdvanceTime);
+    $("#autoAdvanceTime").blur(function () {
+    	setSetting("autoAdvanceTime",$("#autoAdvanceTime").val());
+    	settings.autoAdvanceTime = $("#autoAdvanceTime").val();
+    });
+
+    settings.standardDay = getSetting("standardDay","08301230 13301700");
+    $("#standardDay").val(settings.standardDay);
+    $("#standardDay").blur(function () {
+    	setSetting("standardDay",$("#standardDay").val());
+    	settings.standardDay = $("#standardDay").val();
+    });
     
     var numRowsToDisplay = getURLParameter("n");
     if (!isNumeric(numRowsToDisplay)) numRowsToDisplay = 100;
@@ -574,8 +585,9 @@ body {
 		// if s pressed then put in standard day
 		if (event.keyCode == 83){
 			event.preventDefault();
-			for (i=0;i<settings.standardDay.length;i++) {
-				submitTime(settings.standardDay[i]);
+                        var items = settings.standardDay.split(" ");
+			for (i=0;i<items.length;i++) {
+				submitTime(items[i]);
 			}
 		}
 		
@@ -786,11 +798,6 @@ body {
 		    }
         });
     }
-    
-    $("#autoAdvanceTime").blur(function () {
-    	setSetting("autoAdvanceTime",$("#autoAdvanceTime").val());
-    	settings.autoAdvanceTime = $("#autoAdvanceTime").val();
-    });
     
     refresh();
 	$("#time-range").focus();
