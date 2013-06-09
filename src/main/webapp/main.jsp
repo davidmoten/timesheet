@@ -319,28 +319,28 @@ body {
     //load settings and create onchange functions
     settings.autoAdvanceTime = getSetting("autoAdvanceTime","15:00");
     $("#autoAdvanceTime").val(settings.autoAdvanceTime);
-    $("#autoAdvanceTime").blur(function () {
+    $("#autoAdvanceTime").change(function () {
     	setSetting("autoAdvanceTime",$("#autoAdvanceTime").val());
     	settings.autoAdvanceTime = $("#autoAdvanceTime").val();
     });
 
     settings.standardDay = getSetting("standardDay","08301230 13301700");
     $("#standardDay").val(settings.standardDay);
-    $("#standardDay").blur(function () {
+    $("#standardDay").change(function () {
     	setSetting("standardDay",$("#standardDay").val());
     	settings.standardDay = $("#standardDay").val();
     });
     
     settings.numDaysToDisplay = parseInt(getSetting("numDaysToDisplay","100"));
     $("#numDaysToDisplay").val(settings.numDaysToDisplay);
-    $("#numDaysToDisplay").blur(function () {
+    $("#numDaysToDisplay").change(function () {
         setSetting("numDaysToDisplay",$("#numDaysToDisplay").val());
     	settings.numDaysToDisplay = parseInt($("#numDaysToDisplay").val());
     });
 
     settings.submittedBy = getSetting("submittedBy","");
     $("#submittedBy").val(settings.submittedBy);
-    $("#submittedBy").blur(function () {
+    $("#submittedBy").change(function () {
     	setSetting("submittedBy",$("#submittedBy").val());
     	settings.submittedBy = $("#submittedBy").val();
     });
