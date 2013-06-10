@@ -118,6 +118,7 @@ public class Database {
 	 */
 	public void deleteEntry(String id) {
 		Preconditions.checkNotNull(id);
+		// todo add user filter for security
 		Filter idFilter = new FilterPredicate("entryId", FilterOperator.EQUAL,
 				id);
 		Query q = new Query("Entry").setFilter(idFilter);
@@ -225,8 +226,24 @@ public class Database {
 	}
 
 	public void setSetting(String key, String value) {
-		User user = getUser();
+		Preconditions.checkNotNull(key);
 
+		// delete the key,value pair for the user
+		User user = getUser();
+		Filter keyFilter = new FilterPredicate("key", FilterOperator.EQUAL, key);
+		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
+				user);
+		Filter userAndKeyFilter = CompositeFilterOperator.and(userFilter,
+				keyFilter);
+		Query q = new Query("Entry").setFilter(userAndKeyFilter);
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		for (Entity entity : getEntities(q)) {
+			datastore.delete(entity.getKey());
+			System.out.println("deleted " + entity.getKey());
+		}
+
+		// add the key,value pair for the user
 		Key timesheetKey = KeyFactory.createKey("Timesheet", "Timesheet");
 		// kind=table,entity=row
 		Entity setting = new Entity("Setting", timesheetKey);
@@ -234,8 +251,6 @@ public class Database {
 		setting.setProperty("key", key);
 		setting.setProperty("value", value);
 
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
 		datastore.put(setting);
 		System.out.println("setSetting " + key + "=" + value);
 	}

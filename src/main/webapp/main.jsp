@@ -345,14 +345,44 @@ body {
     	settings.submittedBy = $("#submittedBy").val();
     });
     
-    settings.sunday = getSetting("sunday","true")=="false";
-    checkbox($("#sunday"),settings.sunday);
-    $("#sunday").change(function () {
-        var isChecked = $("#sunday").is(":checked");
-    	setSetting("sunday",isChecked);
-    	settings.sunday = isChecked;
-    });
+    workingDay("sunday");
+    workingDay("monday");
+    workingDay("tuesday");
+    workingDay("wednesday");
+    workingDay("thursday");
+    workingDay("friday");
+    workingDay("saturday");
+    updateWorkingDays();
+        
+    function workingDay(day) {
+    	settings[day] = getSetting(day,"true")!="false";
+    	checkbox($("#"+day),settings[day]);
+    	$("#"+day).change(function () {
+	        var isChecked = $("#"+day).is(":checked");
+	    	setSetting(day,isChecked);
+	    	settings[day] = isChecked;
+	    	updateWorkingDays();
+   		});
+    }
     
+    function updateWorkingDays() {
+        var days = [];
+        if (settings["sunday"])
+            days.push(0);
+        if (settings["monday"])
+            days.push(1);
+        if (settings["tuesday"])
+            days.push(2);
+        if (settings["wednesday"])
+            days.push(3);
+        if (settings["thursday"])
+            days.push(4);
+        if (settings["friday"])
+            days.push(5);
+        if (settings["saturday"])
+            days.push(6);
+        settings.workingDays = days;
+    }
 
     function checkbox(checkbox, isChecked) {
         if (isChecked)
