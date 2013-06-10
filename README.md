@@ -14,10 +14,6 @@ Features are:
 * Asynchronous non-blocking ui using JQueryUI
 * Built and deployed with Maven
 
-Todo:
-
-* persist and load user-specific settings
-
 <img src="https://raw.github.com/davidmoten/timesheet/master/src/docs/screen.png"/>
 
 Demonstration

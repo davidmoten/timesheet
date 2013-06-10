@@ -926,12 +926,11 @@ body {
 		<div id="settings" class="invisibleCompact">
 
 			<p>
-				Auto-advance to next day after time (HHMM):&nbsp;<input
+				Auto-advance to next day after time (HH:MM):&nbsp;<input
 					id="autoAdvanceTime" value="1500" />
-
 			</p>
 			<p class="help">If an auto-advance time is specified (in format
-				HHMM) then the date will be auto-advanced to the next working day if
+				HH:MM) then the date will be auto-advanced to the next working day if
 				the end time of a submission is greater than this time.</p>
 
 			<p>Working days:</p>
