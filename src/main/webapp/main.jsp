@@ -935,14 +935,15 @@ body {
 
 			<p>Working days:</p>
 			<p class="help">Used by auto-advance.</p>
-			<input type="checkbox" id="sunday" value="true">Sunday<br>
-			<input type="checkbox" id="monday" value="true">Monday<br>
-			<input type="checkbox" id="tuesday" value="true" checked="checked">Tuesday<br>
-			<input type="checkbox" id="wednesday" value="true" checked="checked">Wednesday<br>
-			<input type="checkbox" id="thursday" value="true" checked="checked">Thursday<br>
-			<input type="checkbox" id="friday" value="true" checked="checked">Friday<br>
-			<input type="checkbox" id="saturday" value="true">Saturday<br>
-
+			<div style="margin-left:2em;">
+				<input type="checkbox" id="sunday" value="true">Sunday<br>
+				<input type="checkbox" id="monday" value="true">Monday<br>
+				<input type="checkbox" id="tuesday" value="true" checked="checked">Tuesday<br>
+				<input type="checkbox" id="wednesday" value="true" checked="checked">Wednesday<br>
+				<input type="checkbox" id="thursday" value="true" checked="checked">Thursday<br>
+				<input type="checkbox" id="friday" value="true" checked="checked">Friday<br>
+				<input type="checkbox" id="saturday" value="true">Saturday<br>
+			</div>
 			<p>
 				Standard day (space delimited):&nbsp;<input id="standardDay"
 					value="08301230 13001700" />
