@@ -894,6 +894,7 @@ body {
 			    <p>All times are in 24 hour clock.</p>
 				<p>Up-arrow = next date, Down-arrow = previous date</p>
 				<p>Type 's' to enter a standard day as defined in Settings</p>
+				<p>See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video demo</a>.</p>
 			</div>
 			<div id="times"></div>
 			<div id="more">More</div>
