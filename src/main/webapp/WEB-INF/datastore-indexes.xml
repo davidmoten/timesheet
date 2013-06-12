@@ -5,4 +5,8 @@
         <property name="user" direction="asc"/>
         <property name="startTime" direction="asc"/>
     </datastore-index>
+    <datastore-index kind="Setting" ancestor="false" source="manual">
+        <property name="user" direction="asc"/>
+        <property name="key" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>

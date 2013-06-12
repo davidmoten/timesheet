@@ -353,6 +353,8 @@ body {
     workingDay("friday");
     workingDay("saturday");
     updateWorkingDays();
+    
+    setSetting("options",JSON.stringify(settings));
         
     function workingDay(day) {
     	settings[day] = getSetting(day,"true")!="false";
@@ -426,7 +428,12 @@ body {
         $("#settingsLink").removeClass("bold");
     }
     
+    var refreshing = false;
+    
     function refresh() {
+    	//don't allow concurrent refresh
+    	if (refreshing) return;
+    	refreshing = true;
         $("#working").removeClass("invisible");
         hideAll();
         $("#main").removeClass("invisibleCompact");
@@ -441,6 +448,7 @@ body {
 				  submitTime("14001645");
 				  sortRows();
 	              $("#working").addClass("invisible");
+	              refreshing = false;
 		  	},1000);
 		} else {
 			$.ajax({
@@ -454,10 +462,12 @@ body {
   		        console.log("loaded");
   		        sortRows();
                 $("#working").addClass("invisible");
+                refreshing = false;
   		      },
   		      error: function (xhr, ajaxOptions, thrownError) {
   		        alert("could not load times due to " + xhr.status  + ","+ thrownError);
   		        $("#working").addClass("invisible");
+  		        refreshing = false;
   		      }
   		    });
 		}
@@ -821,6 +831,7 @@ body {
     });
     
     function getSetting(key,defaultValue){
+    	if (offline) return defaultValue;
     	var result;
     	$.ajax({
             type: "GET",
@@ -837,13 +848,14 @@ body {
 		    }
         });
     	console.log("getSetting "+ key + "='" + result + "'");
-    	if (offline || result == '')
+    	if (result == '')
     		return defaultValue;
     	else 
     		return result;
     }
     
     function setSetting(key,val){
+    	if (offline) return;
     	$.ajax({
             type: "GET",
             url: "command",
