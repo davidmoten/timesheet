@@ -738,9 +738,15 @@ body {
         $( "#settings" ).removeClass( "invisibleCompact" );
       });
 	
+	
 	$("#loadLink").button()
 	  .click(function(){
 		 document.location.href='load'; 
+	  });
+	
+	$("#aboutLink").button()
+	  .click(function(){
+		 document.location.href='https://github.com/davidmoten/timesheet'; 
 	  });
 	
 	$("#reportLink")
@@ -955,6 +961,7 @@ body {
 				<div id="refreshLink" class="link bold">Time</div>
 				<div id="reportLink" class="link">Report</div>
 				<div id="settingsLink" class="link">Settings</div>
+				<div id="aboutLink" class="link">About</div>
 			</div>
 
 			<div id="main">
