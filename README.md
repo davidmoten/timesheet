@@ -32,7 +32,6 @@ Browse to [http://localhost:8080](http://localhost:8080)
 
 How to run offline (rapid dev of html/js)
 ------------------------------------------
-
 Open this file with your browser (and add the offline parameter):
 
     timesheet/src/main/webapp/main.jsp?offline=true
