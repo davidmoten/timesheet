@@ -368,6 +368,14 @@ body {
     });
 
 	$("#time-range").val(settings.partialTime);
+    if (settings.partialTimeDate!=""){
+		var d = parseInt(settings.partialTimeDate.substring(0,2));
+		var m = parseInt(settings.partialTimeDate.substring(3,5))-1;
+		var y = parseInt(settings.partialTimeDate.substring(6,10));
+		console.log("year="+y);
+		theDate = new Date(y,m,d,0,0,0,0);
+		updateDate();
+	}
     
     workingDay("sunday");
     workingDay("monday");
@@ -381,6 +389,7 @@ body {
     
     function persistSettings() {
         setSetting("options",JSON.stringify(settings));
+		console.log("peristed settings");
     }
     
     function loadSettings() {
@@ -419,6 +428,8 @@ body {
     		settings.weekStartsOn = "sunday";
 		if (!settingExists("partialTime")) 
 			settings.partialTime = "";
+		if (!settingExists("partialTimeDate")) 
+			settings.partialTimeDate = "";
     }
     
     assert(!settingExists("humptyDumpty"),"settingExists unit test 2");
@@ -737,11 +748,14 @@ body {
 	}
 	});
 
-    $("#time-range").change(function () {
+    $("#time-range").blur(function () {
+		settings.partialTime = $("#time-range").val();
+		settings.partialTimeDate = formattedDate(theDate);
 		persistSettings();
 	});
 
     $(window).unload(function() {
+		settings.partialTime = $("#time-range").val();
 		persistSettings();
 	});
 
