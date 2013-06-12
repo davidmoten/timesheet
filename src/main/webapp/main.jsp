@@ -761,15 +761,16 @@ body {
     	$( "#reporting" ).removeClass("invisibleCompact");
     	//default from and to dates to the 1st to end of previous month
     	if ($("#from").val().length==0) 
-    		setReportFromDateToDefault();
+    		setReportStartDateToDefault();
     	
     	if ($("#to").val().length==0) 
-    		setReportToDateToDefault();
+    		setReportEndDateToDefault();
     		
     });
 	
-	function setReportFromDateToDefault() {
+	function setReportStartDateToDefault() {
 		var date = new Date();
+		var weekStartsOn = getWeekStartsOnAsInteger();
 		if (settings.defaultReportStart=="month"){
     		date.setDate(1);
     		date.setMonth(date.getMonth()-1);
@@ -778,15 +779,22 @@ body {
 			date.setMonth(0);
 			date.setFullYear(date.getFullYear()-1);
 		} else if (settings.defaultReportStart=="week"){
-			date.setDate(date.getDate()-date.getDay()-7);
+			var days = date.getDay() - weekStartsOn;
+			if (days <0) days += 7;
+			days +=7;
+			date.setDate(date.getDate()-days);
 		} else if (settings.defaultReportStart=="fortnight"){
-			date.setDate(date.getDate()-date.getDay()-14);
+			var days = date.getDay() - weekStartsOn;
+			if (days <0) days += 7;
+			days +=14;
+			date.setDate(date.getDate()-days);
 		}
 		$("#from").val(formattedDate(date));
 	}
 	
-	function setReportToDateToDefault() {
+	function setReportEndDateToDefault() {
 		var date = new Date();
+		var weekStartsOn = getWeekStartsOnAsInteger();
 		if (settings.defaultReportEnd=="month"){
     		date.setDate(0);
 		} else if (settings.defaultReportEnd=="year"){
@@ -794,9 +802,15 @@ body {
 			date.setMonth(0);
 			date.setDate(0);
 		} else if (settings.defaultReportEnd=="week"){
-			date.setDate(date.getDate()-date.getDay()-1);
+			var days = date.getDay() - weekStartsOn;
+			if (days <0) days += 7;
+			days +=1;
+			date.setDate(date.getDate()-days);
 		} else if (settings.defaultReportEnd=="fortnight"){
-			date.setDate(date.getDate()-date.getDay()-1);
+			var days = date.getDay() - weekStartsOn;
+			if (days <0) days += 7;
+			days +=1;
+			date.setDate(date.getDate()-days);
 		} else if (settings.defaultReportEnd=="yesterday"){
 			date.setDate(date.getDate()-1);
 		} else if (settings.defaultReportEnd=="today"){
@@ -804,6 +818,26 @@ body {
 		}
 		$("#to").val(formattedDate(date));
 	}
+
+	function getWeekStartsOnAsInteger() {
+		var d = settings.weekStartsOn;
+		if (d == "sunday")
+			return 0;
+        else if (d == "monday")
+            return 1;
+        else if (d == "tuesday")
+            return 2;
+        else if (d == "wednesday")
+            return 3;
+        else if (d == "thursday")
+            return 4;
+        else if (d == "friday")
+            return 5;
+        else if (d == "saturday")
+            return 6;
+		else alert("unexpected weekStartOn = " + settings.weekStartOn);
+
+    }
 	
 	$("#from").datepicker({
 	      changeMonth: true,
