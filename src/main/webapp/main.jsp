@@ -227,7 +227,8 @@ body {
     var settings={};
 //    settings.autoAdvanceTime="15:00"
 //    settings.standardDay="08301230 13001700";
-     settings.workingDays=[2,3,4,5];
+    
+    var workingDays; // an array of integers 0=sunday
 
 	var theDate = new Date();
 	theDate.setHours(0);
@@ -315,34 +316,32 @@ body {
     }
 
     var offline = getURLParameter("offline") == "true";
+
+    loadSettings();
     
     //load settings and create onchange functions
-    settings.autoAdvanceTime = getSetting("autoAdvanceTime","15:00");
     $("#autoAdvanceTime").val(settings.autoAdvanceTime);
     $("#autoAdvanceTime").change(function () {
-    	setSetting("autoAdvanceTime",$("#autoAdvanceTime").val());
     	settings.autoAdvanceTime = $("#autoAdvanceTime").val();
+    	persistSettings();
     });
 
-    settings.standardDay = getSetting("standardDay","08301230 13301700");
     $("#standardDay").val(settings.standardDay);
     $("#standardDay").change(function () {
-    	setSetting("standardDay",$("#standardDay").val());
     	settings.standardDay = $("#standardDay").val();
+    	persistSettings();
     });
     
-    settings.numDaysToDisplay = parseInt(getSetting("numDaysToDisplay","100"));
     $("#numDaysToDisplay").val(settings.numDaysToDisplay);
     $("#numDaysToDisplay").change(function () {
-        setSetting("numDaysToDisplay",$("#numDaysToDisplay").val());
     	settings.numDaysToDisplay = parseInt($("#numDaysToDisplay").val());
+    	persistSettings();
     });
 
-    settings.submittedBy = getSetting("submittedBy","");
     $("#submittedBy").val(settings.submittedBy);
     $("#submittedBy").change(function () {
-    	setSetting("submittedBy",$("#submittedBy").val());
     	settings.submittedBy = $("#submittedBy").val();
+    	persistSettings();
     });
     
     workingDay("sunday");
@@ -354,15 +353,54 @@ body {
     workingDay("saturday");
     updateWorkingDays();
     
-    setSetting("options",JSON.stringify(settings));
+    
+    function persistSettings() {
+        setSetting("options",JSON.stringify(settings));
+    }
+    
+    function loadSettings() {
+    	
+    	var defaultSettings = "{}";
+    	settings = JSON.parse(getSetting("options",defaultSettings));
+    	
+    	//set defaults when properties don't exist
+    	if (!settingExists("autoAdvanceTime"))
+    		settings.autoAdvanceTime = "15:00";
+    	if (!settingExists("standardDay"))
+    		settings.standardDay = "08301230 13301700";
+    	if (!settingExists("numDaysToDisplay"))
+    		settings.numDaysToDisplay = 100;
+    	if (!settingExists("submittedBy"))
+    		settings.submittedBy = "";
+    	if (!settingExists("sunday"))
+    		settings.sunday = true;
+    	if (!settingExists("monday"))
+    		settings.monday = true;
+    	if (!settingExists("tuesday"))
+    		settings.tuesday = true;
+    	if (!settingExists("wednesday"))
+    		settings.wednesday = true;
+    	if (!settingExists("thursday"))
+    		settings.thursday = true;
+    	if (!settingExists("friday"))
+    		settings.friday = true;
+    	if (!settingExists("saturday"))
+    		settings.saturday = true;
+    }
+    
+    assert(!settingExists("humptyDumpty"),"settingExists unit test 2");
+    
+    function settingExists(name) {
+    	//return typeof(settings[name])=="undefined";
+    	return name in settings;
+    }
         
     function workingDay(day) {
-    	settings[day] = getSetting(day,"true")!="false";
     	checkbox($("#"+day),settings[day]);
     	$("#"+day).change(function () {
 	        var isChecked = $("#"+day).is(":checked");
-	    	setSetting(day,isChecked);
 	    	settings[day] = isChecked;
+	    	persistSettings();
 	    	updateWorkingDays();
    		});
     }
@@ -383,7 +421,7 @@ body {
             days.push(5);
         if (settings["saturday"])
             days.push(6);
-        settings.workingDays = days;
+        workingDays = days;
     }
 
     function checkbox(checkbox, isChecked) {
@@ -538,7 +576,7 @@ body {
 	   			settings.autoAdvanceTime != "" &&
 	   			(hh2+':'+mm2)>=settings.autoAdvanceTime) {
 	        nextDate();
-		 	while ($.inArray(theDate.getDay(),settings.workingDays)==-1)
+		 	while ($.inArray(theDate.getDay(),workingDays)==-1)
 	          nextDate();
 	      }
 	
