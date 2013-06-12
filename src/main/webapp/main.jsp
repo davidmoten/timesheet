@@ -344,6 +344,26 @@ body {
     	persistSettings();
     });
     
+    $("#defaultReportStart").val(settings.defaultReportStart);
+    $("#defaultReportStart").on('change',function () {
+    	settings.defaultReportStart = $("#defaultReportStart").val();
+    	persistSettings();
+    });
+    
+    $("#defaultReportEnd").val(settings.defaultReportEnd);
+    $("#defaultReportEnd").on('change',function () {
+    	settings.defaultReportEnd = $("#defaultReportEnd").val();
+    	persistSettings();
+    });
+    
+    $("#weekStartsOn").val(settings.weekStartsOn);
+    $("#weekStartsOn").on('change',function () {
+    	settings.weekStartsOn = $("#weekStartsOn").val();
+    	persistSettings();
+    });
+    
+    
+    
     workingDay("sunday");
     workingDay("monday");
     workingDay("tuesday");
@@ -386,6 +406,12 @@ body {
     		settings.friday = true;
     	if (!settingExists("saturday"))
     		settings.saturday = true;
+    	if (!settingExists("defaultReportStart"))
+    		settings.defaultReportStart = "month";
+    	if (!settingExists("defaultReportEnd"))
+    		settings.defaultReportEnd = "month";
+    	if (!settingExists("weekStartsOn"))
+    		settings.weekStartsOn = "sunday";
     }
     
     assert(!settingExists("humptyDumpty"),"settingExists unit test 2");
