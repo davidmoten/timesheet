@@ -27,7 +27,7 @@ body {
 }
 
 .bold {
-	font-weight:bold;
+	font-weight: bold;
 }
 
 .busy {
@@ -82,8 +82,8 @@ body {
 }
 
 #banner {
-   margin-left: -8px;
-   margin-top: -8px;
+	margin-left: -8px;
+	margin-top: -8px;
 }
 
 #day {
@@ -99,23 +99,23 @@ body {
 }
 
 #entryHelp {
-	float:left;
-	padding-top:3px;
-	padding-left:10px;
+	float: left;
+	padding-top: 3px;
+	padding-left: 10px;
 }
 
 #help {
-	padding-top:0.5em;
-	padding-bottom:0.5em;
-	padding-left:1em;
-	padding-right:1em;
-	font-size:80%;
-	background-color:rgb(240,240,240);
-	width:50em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	font-size: 80%;
+	background-color: rgb(240, 240, 240);
+	width: 50em;
 	max-width: 85%;
-	margin-bottom:0.5em;
-	border:thin solid;
-	border-color:gray;
+	margin-bottom: 0.5em;
+	border: thin solid;
+	border-color: gray;
 }
 
 .timesDay {
@@ -150,7 +150,7 @@ body {
 #time-range {
 	width: 7em;
 	margin-bottom: 10px;
-	float:left;
+	float: left;
 }
 
 #standardDay {
@@ -921,103 +921,150 @@ body {
 
 	<div class="ui-widget">
 
-		<div id="banner" class="noprint"><img src="image/banner.jpg"/></div>
+		<div id="banner" class="noprint">
+			<img src="image/banner.jpg" />
+		</div>
 		<div id="nonBanner">
-		<div class="links noprint">
-			<div id="refreshLink" class="link bold">Time</div>
-			<div id="reportLink" class="link">Report</div>
-			<div id="settingsLink" class="link">Settings</div>
-		</div>
-
-		<div id="main">
-			<img id="working" class="invisible" src="image/spinner.gif" /><br />
-			<div id="day"></div>
-			<label id="date" for="time-range"></label> <input id="time-range" />
-			<div id="entryHelp"><img src="image/help.png"/></div> 
-			<br style="clear:both"/>
-			<div id="help" class="invisibleCompact">
-			    <p>The expected format is:</p>
-			    <p style="margin-left:2em;">HHMMHHMM</p>
-			    <p>For example, the work period 13:30-17:30 is entered:</p>
-			    <p style="margin-left:2em;">13301730</p>
-			    <p>Hit Enter to submit a value</p>
-			    <p>All times are in 24 hour clock.</p>
-				<p>Up-arrow = next date, Down-arrow = previous date</p>
-				<p>Type 's' to enter a standard day as defined in Settings</p>
-				<p>See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video demo</a>.</p>
+			<div class="links noprint">
+				<div id="refreshLink" class="link bold">Time</div>
+				<div id="reportLink" class="link">Report</div>
+				<div id="settingsLink" class="link">Settings</div>
 			</div>
-			<div id="times"></div>
-			<div id="more">More</div>
-		</div>
 
-		<div id="reporting" class="invisibleCompact">
-			<div class="noprint">
-				<div style="float: left; width: 4em; margin-top: 3px;">From</div>
-				<div style="float: left;">
-					<input type="text" id="from" />
+			<div id="main">
+				<img id="working" class="invisible" src="image/spinner.gif" /><br />
+				<div id="day"></div>
+				<label id="date" for="time-range"></label> <input id="time-range" />
+				<div id="entryHelp">
+					<img src="image/help.png" />
 				</div>
-				<br style="clear: both;" />
-				<div style="float: left; width: 4em; margin-top: 3px;">To</div>
-				<div style="float: left;">
-					<input type="text" id="to" />
+				<br style="clear: both" />
+				<div id="help" class="invisibleCompact">
+					<p>The expected format is:</p>
+					<p style="margin-left: 2em;">HHMMHHMM</p>
+					<p>For example, the work period 13:30-17:30 is entered:</p>
+					<p style="margin-left: 2em;">13301730</p>
+					<p>Hit Enter to submit a value</p>
+					<p>All times are in 24 hour clock.</p>
+					<p>Up-arrow = next date, Down-arrow = previous date</p>
+					<p>Type 's' to enter a standard day as defined in Settings</p>
+					<p>
+						See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video
+							demo</a>.
+					</p>
 				</div>
-				<br style="clear: both;" />
-				<div id="showReport" style="margin-top: 10px; float: left;">Show
-					report</div>
-				<div id="print" style="margin-left:2em; margin-top: 10px; float: left;">Print</div>
-				<div style="float: left;margin-left:1em;padding-top:15px;">
-					<img id="reportWorking" class="invisible" src="image/spinner.gif" />
-				</div>
-				<br style="clear: both;" />
+				<div id="times"></div>
+				<div id="more">More</div>
 			</div>
-			<div id="reportContent" style="margin-top: 20px;"></div>
-		</div>
 
-		<div id="settings" class="invisibleCompact">
-
-			<p>
-				Auto-advance to next day after time (HH:MM):&nbsp;<input
-					id="autoAdvanceTime" value="1500" />
-			</p>
-			<p class="help">If an auto-advance time is specified (in format
-				HH:MM) then the date will be auto-advanced to the next working day if
-				the end time of a submission is greater than this time.</p>
-
-			<p>Working days:</p>
-			<p class="help">Used by auto-advance.</p>
-			<div style="margin-left:2em;">
-				<input type="checkbox" id="sunday" value="true">Sunday<br>
-				<input type="checkbox" id="monday" value="true">Monday<br>
-				<input type="checkbox" id="tuesday" value="true" checked="checked">Tuesday<br>
-				<input type="checkbox" id="wednesday" value="true" checked="checked">Wednesday<br>
-				<input type="checkbox" id="thursday" value="true" checked="checked">Thursday<br>
-				<input type="checkbox" id="friday" value="true" checked="checked">Friday<br>
-				<input type="checkbox" id="saturday" value="true">Saturday<br>
+			<div id="reporting" class="invisibleCompact">
+				<div class="noprint">
+					<div style="float: left; width: 4em; margin-top: 3px;">From</div>
+					<div style="float: left;">
+						<input type="text" id="from" />
+					</div>
+					<br style="clear: both;" />
+					<div style="float: left; width: 4em; margin-top: 3px;">To</div>
+					<div style="float: left;">
+						<input type="text" id="to" />
+					</div>
+					<br style="clear: both;" />
+					<div id="showReport" style="margin-top: 10px; float: left;">Show
+						report</div>
+					<div id="print"
+						style="margin-left: 2em; margin-top: 10px; float: left;">Print</div>
+					<div style="float: left; margin-left: 1em; padding-top: 15px;">
+						<img id="reportWorking" class="invisible" src="image/spinner.gif" />
+					</div>
+					<br style="clear: both;" />
+				</div>
+				<div id="reportContent" style="margin-top: 20px;"></div>
 			</div>
-			<p>
-				Standard day (space delimited):&nbsp;<input id="standardDay"
-					value="08301230 13001700" />
-			</p>
-			<p class="help">A standard day is input using the 's' character
-				in the time field. To specify a standard day of 08:30 to 12:30 then
-				back working between 13:00 and 17:30, enter '08301230 13001730' in
-				this field.</p>
-			<p>
-				Number of days to display:&nbsp;<input id="numDaysToDisplay" value="100" />
-			</p>
-			<p class="help">The number of days back in time from now that
-				will be displayed in the list of times on the entry view.</p>
-			<p>
-				Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
-			<p class="help">This value will be placed in the 'Submitted by' section of the report.</p>
-			
-			<div id="loadLink">Import</div>
-			<p class="help">Import tab delimited values in bulk.</p>
-			<div id="exportLink">Export</div>
-			<p class="help">Export all times from the database as tab delimited values.</p>
-		</div>
 
-	</div>
+			<div id="settings" class="invisibleCompact">
+
+				<p>
+					Auto-advance to next day after time (HH:MM):&nbsp;<input
+						id="autoAdvanceTime" value="1500" />
+				</p>
+				<p class="help">If an auto-advance time is specified (in format
+					HH:MM) then the date will be auto-advanced to the next working day
+					if the end time of a submission is greater than this time.</p>
+
+				<p>Working days:</p>
+				<p class="help">Used by auto-advance.</p>
+				<div style="margin-left: 2em;">
+					<input type="checkbox" id="sunday" value="true">Sunday<br>
+					<input type="checkbox" id="monday" value="true">Monday<br>
+					<input type="checkbox" id="tuesday" value="true" checked="checked">Tuesday<br>
+					<input type="checkbox" id="wednesday" value="true"
+						checked="checked">Wednesday<br> <input
+						type="checkbox" id="thursday" value="true" checked="checked">Thursday<br>
+					<input type="checkbox" id="friday" value="true" checked="checked">Friday<br>
+					<input type="checkbox" id="saturday" value="true">Saturday<br>
+				</div>
+				<p>
+					Standard day (space delimited):&nbsp;<input id="standardDay"
+						value="08301230 13001700" />
+				</p>
+				<p class="help">A standard day is input using the 's' character
+					in the time field. To specify a standard day of 08:30 to 12:30 then
+					back working between 13:00 and 17:30, enter '08301230 13001730' in
+					this field.</p>
+				<p>
+					Number of days to display:&nbsp;<input id="numDaysToDisplay"
+						value="100" />
+				</p>
+				<p class="help">The number of days back in time from now that
+					will be displayed in the list of times on the entry view.</p>
+
+				<p>
+					Default report start date:&nbsp; <select id="defaultReportStart">
+						<option value="year">Start of last complete year</option>
+						<option value="quarter">Start of last complete quarter</option>
+						<option value="month">Start of last complete month</option>
+						<option value="fortnight">Start of last complete fortnight</option>
+						<option value="week">Start of last complete week</option>
+					</select>
+				</p>
+				
+				<p>
+					Default report end date:&nbsp; <select id="defaultReportEnd">
+						<option value="year">End of last complete year</option>
+						<option value="quarter">End of last complete quarter</option>
+						<option value="month">End of last complete month</option>
+						<option value="fortnight">End of last complete fortnight</option>
+						<option value="week">End of last complete week</option>
+						<option value="yesterday">Yesterday</option>
+						<option value="today">Today</option>
+					</select>
+				</p>
+				
+				<p>
+					Fortnight/week starts on:&nbsp; <select id="weekStartsOn">
+						<option value="sunday">Sunday</option>
+						<option value="monday">Monday</option>
+						<option value="tuesday">Tuesday</option>
+						<option value="wednesday">Wednesday</option>
+						<option value="thursday">Thursday</option>
+						<option value="friday">Friday</option>
+						<option value="saturday">Saturday</option>
+					</select>
+				</p>
+				
+				<p>
+					Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
+				<p class="help">This value will be placed in the 'Submitted by'
+					section of the report.</p>
+
+				<div id="loadLink">Import</div>
+				<p class="help">Import tab delimited values in bulk.</p>
+				<div id="exportLink">Export</div>
+				<p class="help">Export all times from the database as tab
+					delimited values.</p>
+			</div>
+
+		</div>
 	</div>
 
 </body>
