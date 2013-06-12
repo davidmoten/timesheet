@@ -338,9 +338,15 @@ body {
     	persistSettings();
     });
 
-    $("#submittedBy").val(settings.submittedBy);
-    $("#submittedBy").change(function () {
-    	settings.submittedBy = $("#submittedBy").val();
+    $("#reportHeader").val(settings.reportHeader);
+    $("#reportHeader").change(function () {
+    	settings.reportHeader = $("#reportHeader").val();
+    	persistSettings();
+    });
+    
+    $("#reportFooter").val(settings.reportFooter);
+    $("#reportFooter").change(function () {
+    	settings.reportFooter = $("#reportFooter").val();
     	persistSettings();
     });
     
@@ -404,8 +410,6 @@ body {
     		settings.standardDay = "08301230 13301700";
     	if (!settingExists("numDaysToDisplay"))
     		settings.numDaysToDisplay = 100;
-    	if (!settingExists("submittedBy"))
-    		settings.submittedBy = "";
     	if (!settingExists("sunday"))
     		settings.sunday = true;
     	if (!settingExists("monday"))
@@ -430,6 +434,21 @@ body {
 			settings.partialTime = "";
 		if (!settingExists("partialTimeDate")) 
 			settings.partialTimeDate = "";
+		if (!settingExists("reportHeader"))
+			settings.reportHeader = "<h3>Timesheet</h3>\n";
+		if (!settingExists("reportFooter"))
+			settings.reportFooter = createReportFooter();
+    }
+    
+    function createReportFooter() {
+       var buffer = "";
+       buffer += '<p class="spaceBelow">Submitted by:</p>\n';
+ 	   buffer += '<p class="spaceBelow">Signature:</p>\n';
+ 	   buffer += '<p class="spaceBelow">Date:</p>\n';
+ 	   buffer += '<p class="spaceBelow">Authorized by:</p>\n';
+ 	   buffer += '<p class="spaceBelow">Signature:</p>\n';
+ 	   buffer += '<p class="spaceBelow">Date:</p>\n';
+ 	   return buffer;
     }
     
     assert(!settingExists("humptyDumpty"),"settingExists unit test 2");
@@ -508,6 +527,7 @@ body {
         $("#refreshLink").removeClass("bold");
         $("#reportLink").removeClass("bold");
         $("#settingsLink").removeClass("bold");
+        $("#aboutLink").removeClass("bold");
     }
     
     var refreshing = false;
@@ -779,7 +799,9 @@ body {
 	
 	$("#aboutLink")
 	  .click(function(){
-		 document.location.href='https://github.com/davidmoten/timesheet'; 
+		 hideAll();
+		 $("#aboutLink").addClass("bold");
+	     $( "#about" ).removeClass( "invisibleCompact" );
 	  });
 	
 	$("#reportLink")
@@ -914,7 +936,7 @@ body {
     });
     
     function loadReport(times) {
-   		$("#reportContent").empty().append("<h3>Timesheet</h3>");
+   		$("#reportContent").empty().append(settings.reportHeader);
    		
    		var buffer = "";
 		var previousDate = null;    	
@@ -978,12 +1000,7 @@ body {
     	
        var decimalHours = (totalMinutes/60.0).toFixed(2);
 	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '  ('+ decimalHours +' decimal)</p>';
-	   buffer += '<p class="spaceBelow">Submitted by:</p>';
-	   buffer += '<p class="spaceBelow">Signature:</p>';
-	   buffer += '<p class="spaceBelow">Date:</p>';
-	   buffer += '<p class="spaceBelow">Authorized by:</p>';
-	   buffer += '<p class="spaceBelow">Signature:</p>';
-	   buffer += '<p class="spaceBelow">Date:</p>';
+	   buffer += settings.reportFooter;
 	   $("#reportContent").append(buffer);
     }
 
@@ -1113,6 +1130,19 @@ body {
 				<div id="reportContent" style="margin-top: 20px;"></div>
 			</div>
 
+			<div id="about" class="invisibleCompact">
+				<p>Created by Dave Moten 2013 using JQuery and Google AppEngine.</p>
+				<p>
+					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
+				</p>
+				<p>Report any problems/requests as an issue on github at the
+					above link.</p>
+				<p>
+					See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video
+						demo</a>.
+				</p>
+			</div>
+
 			<div id="settings" class="invisibleCompact">
 
 				<p>
@@ -1154,11 +1184,12 @@ body {
 					Default report start date:&nbsp; <select id="defaultReportStart">
 						<option value="year">Start of last complete year</option>
 						<option value="month">Start of last complete month</option>
-						<option value="fortnight">Start of last complete fortnight</option>
+						<option value="fortnight">Start of last complete
+							fortnight</option>
 						<option value="week">Start of last complete week</option>
 					</select>
 				</p>
-				
+
 				<p>
 					Default report end date:&nbsp; <select id="defaultReportEnd">
 						<option value="year">End of last complete year</option>
@@ -1169,7 +1200,7 @@ body {
 						<option value="today">Today</option>
 					</select>
 				</p>
-				
+
 				<p>
 					Fortnight/week starts on:&nbsp; <select id="weekStartsOn">
 						<option value="sunday">Sunday</option>
@@ -1181,12 +1212,26 @@ body {
 						<option value="saturday">Saturday</option>
 					</select>
 				</p>
-				<p class="help">Only applies when week/fortnight options selected for default report start date and end date.</p>
-				
+				<p class="help">Only applies when week/fortnight options
+					selected for default report start date and end date.</p>
+
+				<p>Report header:</p>
+				<p class="help">This html block will be placed at the top of the
+					report.</p>
 				<p>
-					Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
-				<p class="help">This value will be placed in the 'Submitted by'
-					section of the report.</p>
+					<textarea id="reportHeader"
+						style="width: 90%; max-width: 600px; height: 4em; font-size:80%;font-family: Courier, monospace;" value=""></textarea>
+				</p>
+
+
+				<p>Report footer:</p>
+				<p class="help">This html block will be placed at the bottom of
+					the report.</p>
+				<p>
+					<textarea id="reportFooter"
+						style="width: 90%; max-width: 600px; height: 5em; font-size:80%;font-family: Courier, monospace;" value=""></textarea>
+				</p>
+
 
 				<div id="loadLink">Import</div>
 				<p class="help">Import tab delimited values in bulk.</p>
