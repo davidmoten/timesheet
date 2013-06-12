@@ -235,7 +235,7 @@ public class Database {
 				user);
 		Filter userAndKeyFilter = CompositeFilterOperator.and(userFilter,
 				keyFilter);
-		Query q = new Query("Entry").setFilter(userAndKeyFilter);
+		Query q = new Query("Setting").setFilter(userAndKeyFilter);
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		for (Entity entity : getEntities(q)) {
