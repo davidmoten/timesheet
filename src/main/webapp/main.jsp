@@ -760,30 +760,50 @@ body {
 		$("#reportLink").addClass("bold");
     	$( "#reporting" ).removeClass("invisibleCompact");
     	//default from and to dates to the 1st to end of previous month
-    	if ($("#from").val().length==0) {
-    		var date = new Date();
-    		if (settings.defaultReportStart=="month"){
-	    		date.setDate(1);
-	    		date.setMonth(date.getMonth()-1);
-    		} else if (settings.defaultReportStart=="year"){
-    			date.setDate(1);
-    			date.setMonth(0);
-    			date.setFullYear(date.getFullYear()-1);
-    		}
-    		$("#from").val(formattedDate(date));
-    	}
-    	if ($("#to").val().length==0) {
-    		var date = new Date();
-    		if (settings.defaultReportEnd=="month"){
-	    		date.setDate(0);
-    		} else if (settings.defaultReportEnd=="year"){
-    			date.setDate(1);
-    			date.setMonth(0);
-    			date.setDate(0);
-    		}
-    		$("#to").val(formattedDate(date));
-    	}
+    	if ($("#from").val().length==0) 
+    		setReportFromDateToDefault();
+    	
+    	if ($("#to").val().length==0) 
+    		setReportToDateToDefault();
+    		
     });
+	
+	function setReportFromDateToDefault() {
+		var date = new Date();
+		if (settings.defaultReportStart=="month"){
+    		date.setDate(1);
+    		date.setMonth(date.getMonth()-1);
+		} else if (settings.defaultReportStart=="year"){
+			date.setDate(1);
+			date.setMonth(0);
+			date.setFullYear(date.getFullYear()-1);
+		} else if (settings.defaultReportStart=="week"){
+			date.setDate(date.getDate()-date.getDay()-7);
+		} else if (settings.defaultReportStart=="fortnight"){
+			date.setDate(date.getDate()-date.getDay()-14);
+		}
+		$("#from").val(formattedDate(date));
+	}
+	
+	function setReportToDateToDefault() {
+		var date = new Date();
+		if (settings.defaultReportEnd=="month"){
+    		date.setDate(0);
+		} else if (settings.defaultReportEnd=="year"){
+			date.setDate(1);
+			date.setMonth(0);
+			date.setDate(0);
+		} else if (settings.defaultReportEnd=="week"){
+			date.setDate(date.getDate()-date.getDay()-1);
+		} else if (settings.defaultReportEnd=="fortnight"){
+			date.setDate(date.getDate()-date.getDay()-1);
+		} else if (settings.defaultReportEnd=="yesterday"){
+			date.setDate(date.getDate()-1);
+		} else if (settings.defaultReportEnd=="today"){
+			//do nothing
+		}
+		$("#to").val(formattedDate(date));
+	}
 	
 	$("#from").datepicker({
 	      changeMonth: true,
@@ -1071,7 +1091,6 @@ body {
 				<p>
 					Default report start date:&nbsp; <select id="defaultReportStart">
 						<option value="year">Start of last complete year</option>
-						<option value="quarter">Start of last complete quarter</option>
 						<option value="month">Start of last complete month</option>
 						<option value="fortnight">Start of last complete fortnight</option>
 						<option value="week">Start of last complete week</option>
@@ -1081,7 +1100,6 @@ body {
 				<p>
 					Default report end date:&nbsp; <select id="defaultReportEnd">
 						<option value="year">End of last complete year</option>
-						<option value="quarter">End of last complete quarter</option>
 						<option value="month">End of last complete month</option>
 						<option value="fortnight">End of last complete fortnight</option>
 						<option value="week">End of last complete week</option>
