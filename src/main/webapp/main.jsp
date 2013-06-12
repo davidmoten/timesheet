@@ -347,18 +347,23 @@ body {
     $("#defaultReportStart").val(settings.defaultReportStart);
     $("#defaultReportStart").on('change',function () {
     	settings.defaultReportStart = $("#defaultReportStart").val();
+    	//reset from date in report
+    	$("#from").val("");
     	persistSettings();
     });
     
     $("#defaultReportEnd").val(settings.defaultReportEnd);
     $("#defaultReportEnd").on('change',function () {
     	settings.defaultReportEnd = $("#defaultReportEnd").val();
+    	$("#to").val("");
     	persistSettings();
     });
     
     $("#weekStartsOn").val(settings.weekStartsOn);
     $("#weekStartsOn").on('change',function () {
     	settings.weekStartsOn = $("#weekStartsOn").val();
+    	$("#from").val("");
+    	$("#to").val("");
     	persistSettings();
     });
     
@@ -757,13 +762,25 @@ body {
     	//default from and to dates to the 1st to end of previous month
     	if ($("#from").val().length==0) {
     		var date = new Date();
-    		date.setDate(1);
-    		date.setMonth(date.getMonth()-1);
+    		if (settings.defaultReportStart=="month"){
+	    		date.setDate(1);
+	    		date.setMonth(date.getMonth()-1);
+    		} else if (settings.defaultReportStart=="year"){
+    			date.setDate(1);
+    			date.setMonth(0);
+    			date.setFullYear(date.getFullYear()-1);
+    		}
     		$("#from").val(formattedDate(date));
     	}
     	if ($("#to").val().length==0) {
     		var date = new Date();
-    		date.setDate(0);
+    		if (settings.defaultReportEnd=="month"){
+	    		date.setDate(0);
+    		} else if (settings.defaultReportEnd=="year"){
+    			date.setDate(1);
+    			date.setMonth(0);
+    			date.setDate(0);
+    		}
     		$("#to").val(formattedDate(date));
     	}
     });
