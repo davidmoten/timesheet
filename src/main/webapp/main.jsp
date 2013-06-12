@@ -751,6 +751,8 @@ body {
     $("#time-range").blur(function () {
 		settings.partialTime = $("#time-range").val();
 		settings.partialTimeDate = formattedDate(theDate);
+		if (settings.partia.Time == "")
+			settings.partialTimeDate = "";
 		persistSettings();
 	});
 
