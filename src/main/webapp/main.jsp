@@ -744,7 +744,7 @@ body {
 		 document.location.href='load'; 
 	  });
 	
-	$("#aboutLink").button()
+	$("#aboutLink")
 	  .click(function(){
 		 document.location.href='https://github.com/davidmoten/timesheet'; 
 	  });
