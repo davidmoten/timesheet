@@ -1077,6 +1077,7 @@ body {
 						<option value="saturday">Saturday</option>
 					</select>
 				</p>
+				<p class="help">Only applies when week/fortnight options selected for default report start date and end date.</p>
 				
 				<p>
 					Submitted by:&nbsp;<input id="submittedBy" value="David Moten" />
