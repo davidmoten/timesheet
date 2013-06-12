@@ -735,6 +735,10 @@ body {
 	}
 	});
 
+    $("#time-range").change(function () {
+		console.log('changed');
+	});
+
 
 	$("#settingsLink")
       .click(function() {
