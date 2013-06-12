@@ -749,18 +749,20 @@ body {
 	});
 
     $("#time-range").blur(function () {
+		persistPartialTime();
+	});
+
+    $(window).unload(function() {
+		persistPartialTime();
+	});
+
+    function persistPartialTime() {
 		settings.partialTime = $("#time-range").val();
 		settings.partialTimeDate = formattedDate(theDate);
 		if (settings.partialTime == "")
 			settings.partialTimeDate = "";
 		persistSettings();
-	});
-
-    $(window).unload(function() {
-		settings.partialTime = $("#time-range").val();
-		persistSettings();
-	});
-
+	}
 
 	$("#settingsLink")
       .click(function() {
