@@ -41,14 +41,6 @@ How to deploy to appengine
 ----------------------------
     mvn clean package appengine:update -Dappengine.app.name=<YOUR_APP_NAME>
 
-How to configure running application
---------------------------------------
-Add the url parameter *n* = the number of days from today to go back in history and display in main view.
 
-For example
-
-    http://its-showtime.appspot.com?n=10
-
-will show maximum 10 rows at a time.
 
 
