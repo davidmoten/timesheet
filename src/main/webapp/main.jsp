@@ -366,8 +366,8 @@ body {
     	$("#to").val("");
     	persistSettings();
     });
-    
-    
+
+	$("#time-range").val(settings.partialTime);
     
     workingDay("sunday");
     workingDay("monday");
@@ -417,6 +417,8 @@ body {
     		settings.defaultReportEnd = "month";
     	if (!settingExists("weekStartsOn"))
     		settings.weekStartsOn = "sunday";
+		if (!settingExists("partialTime")) 
+			settings.partialTime = "";
     }
     
     assert(!settingExists("humptyDumpty"),"settingExists unit test 2");
@@ -736,7 +738,11 @@ body {
 	});
 
     $("#time-range").change(function () {
-		console.log('changed');
+		persistSettings();
+	});
+
+    $(window).unload(function() {
+		persistSettings();
 	});
 
 
