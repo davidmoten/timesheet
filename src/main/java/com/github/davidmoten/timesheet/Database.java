@@ -1,18 +1,27 @@
 package com.github.davidmoten.timesheet;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -307,6 +316,18 @@ public class Database {
 			msg.setSubject("Timesheet export " + new Date());
 			msg.setText(msgBody);
 
+			// construct the body part
+			DataSource dataSource = new ByteArrayDataSource(
+					getExportZippedBytes(), "application/zip");
+			MimeBodyPart bodyPart = new MimeBodyPart();
+			bodyPart.setDataHandler(new DataHandler(dataSource));
+			bodyPart.setFileName("times.zip");
+
+			// construct the mime multi part
+			MimeMultipart mimeMultipart = new MimeMultipart();
+			mimeMultipart.addBodyPart(bodyPart);
+
+			msg.setContent(mimeMultipart);
 			Transport.send(msg);
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
@@ -314,5 +335,20 @@ public class Database {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private byte[] getExportZippedBytes() {
+		String export = getTimesTabDelimited();
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		ZipOutputStream zos = new ZipOutputStream(bytes);
+		try {
+			zos.putNextEntry(new ZipEntry("times.txt"));
+			zos.write(export.getBytes("UTF-8"));
+			zos.closeEntry();
+			zos.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return bytes.toByteArray();
 	}
 }
