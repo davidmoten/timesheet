@@ -314,7 +314,10 @@ public class Database {
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
 					email, null));
 			msg.setSubject("Timesheet export " + new Date());
-			msg.setText(msgBody);
+
+			// construct the text body part
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+			textBodyPart.setText(msgBody);
 
 			// construct the body part
 			DataSource dataSource = new ByteArrayDataSource(
@@ -325,6 +328,7 @@ public class Database {
 
 			// construct the mime multi part
 			MimeMultipart mimeMultipart = new MimeMultipart();
+			mimeMultipart.addBodyPart(textBodyPart);
 			mimeMultipart.addBodyPart(bodyPart);
 
 			msg.setContent(mimeMultipart);
