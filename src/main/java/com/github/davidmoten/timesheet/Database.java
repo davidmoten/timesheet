@@ -1,9 +1,18 @@
 package com.github.davidmoten.timesheet;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.TimeZone;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -257,6 +266,7 @@ public class Database {
 	}
 
 	public String getSetting(String key) {
+		Preconditions.checkNotNull(key, "key cannot be null");
 		User user = getUser();
 		Filter userFilter = new FilterPredicate("user", FilterOperator.EQUAL,
 				user);
@@ -278,5 +288,31 @@ public class Database {
 		}
 		System.out.println("getSetting " + key + "=" + result);
 		return result;
+	}
+
+	public void sendExport(String email) {
+		Preconditions.checkNotNull(email, "email parameter cannot be null");
+
+		try {
+			Properties props = new Properties();
+			Session session = Session.getDefaultInstance(props, null);
+
+			String msgBody = "Attached please find export of timesheet data.";
+
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(
+					"noreply@its-showtime.appspotmail.com", null));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					email, null));
+			msg.setSubject("Timesheet export " + new Date());
+			msg.setText(msgBody);
+
+			Transport.send(msg);
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 }

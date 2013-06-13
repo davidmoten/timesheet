@@ -1022,7 +1022,26 @@ body {
     });
     
     $("#sendEmail").button().click(function () {
-    	//TODO
+		if (settings.email =="") { alert("You must enter the email address first"); return;}
+    	if (offline) return;
+    	$("#sending").removeClass("invisibleCompact");
+    	$.ajax({
+            type: "GET",
+            url:  "command",
+            data: "command=sendExport&email="+ settings.email,
+            contentType: 'text/plain',
+		    dataType: "html",
+            async: true,
+            success : function(data) {
+                result = data;
+                $("#sending").addClass("invisibleCompact");
+            },
+    		error: function (xhr, ajaxOptions, thrownError) {
+		        alert("could not get setting " + key + " due to " + xhr.status  + ","+ thrownError);
+		        result = "";
+		        $("#sending").addClass("invisibleCompact");
+		    }
+        });
     });
     
     $("#print").button().click(function() {
@@ -1253,6 +1272,7 @@ body {
 				<p class="help">Export all times from the database as tab
 					delimited values.</p>
 				<p>Email all times as zipped attachment to:&nbsp;<input id="email" value=""></input><div id="sendEmail">Send</div></p>
+				<p class="help invisibleCompact" id="sending" >Sending...</p>
 				<p class="help">Send an email to the given email with all times from the database as tab delimited values in a zipped attachment.</p>
 			</div>
 

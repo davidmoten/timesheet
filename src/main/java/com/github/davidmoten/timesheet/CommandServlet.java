@@ -33,6 +33,7 @@ public class CommandServlet extends HttpServlet {
 	private static final Object COMMAND_EXPORT_TIMES = "exportTimes";
 	private static final Object COMMAND_GET_SETTING = "getSetting";
 	private static final Object COMMAND_SET_SETTING = "setSetting";
+	private static final Object COMMAND_SEND_EXPORT = "sendExport";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -57,8 +58,15 @@ public class CommandServlet extends HttpServlet {
 			setSetting(req, resp);
 		else if (COMMAND_GET_SETTING.equals(command))
 			getSetting(req, resp);
+		else if (COMMAND_SEND_EXPORT.equals(command))
+			sendExport(req, resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
+	}
+
+	private void sendExport(HttpServletRequest req, HttpServletResponse resp) {
+		String email = req.getParameter("email");
+		db.sendExport(email);
 	}
 
 	@Override
