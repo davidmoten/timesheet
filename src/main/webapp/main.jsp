@@ -524,6 +524,7 @@ body {
         $("#importing").addClass("invisibleCompact");
         $("#exporting").addClass("invisibleCompact");
         $("#settings").addClass("invisibleCompact");
+        $("#about").addClass("invisibleCompact");
         $("#refreshLink").removeClass("bold");
         $("#reportLink").removeClass("bold");
         $("#settingsLink").removeClass("bold");
