@@ -310,7 +310,7 @@ public class Database {
 
 			Message msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress(
-					"noreply@its-showtime.appspotmail.com", null));
+					"noreply@"+System.getProperty("appengine.app.name")+".appspotmail.com", null));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
 					email, null));
 			msg.setSubject("Timesheet export " + new Date());
