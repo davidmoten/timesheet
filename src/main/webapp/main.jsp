@@ -394,7 +394,7 @@ body {
     
     
     function persistSettings() {
-        setSetting("options",JSON.stringify(settings));
+        setSetting("options",JSON.stringify(settings).replace(/\\n/g, "\\n"));
 		console.log("peristed settings");
     }
     
@@ -1031,6 +1031,7 @@ body {
             },
     		error: function (xhr, ajaxOptions, thrownError) {
 		        alert("could not get setting " + key + " due to " + xhr.status  + ","+ thrownError);
+		        result = "";
 		    }
         });
     	console.log("getSetting "+ key + "='" + result + "'");
