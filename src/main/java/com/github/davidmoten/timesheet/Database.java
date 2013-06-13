@@ -17,6 +17,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -249,7 +250,7 @@ public class Database {
 		Entity setting = new Entity("Setting", timesheetKey);
 		setting.setProperty("user", user);
 		setting.setProperty("key", key);
-		setting.setProperty("value", value);
+		setting.setProperty("value", new Text(value));
 
 		datastore.put(setting);
 		System.out.println("setSetting " + key + "=" + value);
