@@ -344,6 +344,12 @@ body {
     	persistSettings();
     });
     
+    $("#email").val(settings.email);
+    $("#email").change(function () {
+    	settings.email = $("#email").val();
+    	persistSettings();
+    });
+    
     $("#reportFooter").val(settings.reportFooter);
     $("#reportFooter").change(function () {
     	settings.reportFooter = $("#reportFooter").val();
@@ -438,6 +444,8 @@ body {
 			settings.reportHeader = "<h3>Timesheet</h3>\n";
 		if (!settingExists("reportFooter"))
 			settings.reportFooter = createReportFooter();
+		if (!settingExists("email"))
+			settings.email = "";
     }
     
     function createReportFooter() {
@@ -1013,6 +1021,10 @@ body {
     	window.location = "command?command=exportTimes";
     });
     
+    $("#sendEmail").button().click(function () {
+    	//TODO
+    });
+    
     $("#print").button().click(function() {
     	window.print();
     });
@@ -1240,6 +1252,8 @@ body {
 				<div id="exportLink">Export</div>
 				<p class="help">Export all times from the database as tab
 					delimited values.</p>
+				<p>Email all times as zipped attachment to:&nbsp;<input id="email" value=""></input><div id="sendEmail">Send</div></p>
+				<p class="help">Send an email to the given email with all times from the database as tab delimited values in a zipped attachment.</p>
 			</div>
 
 		</div>
