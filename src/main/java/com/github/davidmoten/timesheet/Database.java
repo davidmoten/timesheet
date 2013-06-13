@@ -270,7 +270,7 @@ public class Database {
 		if (!it.hasNext())
 			result = "";
 		else {
-			String value = (String) it.next().getProperty("value");
+			String value = ((Text) it.next().getProperty("value")).getValue();
 			if (value == null)
 				result = "";
 			else
