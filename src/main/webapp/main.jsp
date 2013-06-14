@@ -1225,8 +1225,7 @@ body {
 				<p>
 					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
 				</p>
-				<p>Report any problems/requests as an issue on github at the
-					above link.</p>
+				<p>Report any problems/requests as an issue <a href="https://github.com/davidmoten/timesheet/issues">here</a>.</p>
 				<p>
 					See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video
 						demo</a>.
