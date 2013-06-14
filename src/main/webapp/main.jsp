@@ -1221,7 +1221,7 @@ body {
 			</div>
 
 			<div id="about" class="invisibleCompact">
-				<p>Created by Dave Moten 2013 using JQuery and Google AppEngine.</p>
+				<p>Created by Dave Moten 2013 using JQuery, Java and Google AppEngine.</p>
 				<p>
 					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
 				</p>
