@@ -598,7 +598,6 @@ body {
   		  var finishMinutes = startMinutes + durationMs/60000;
   		  var t1 = formatTime(startMinutes);
   		  var t2 = formatTime(finishMinutes);
-  		  console.log("dt="+date + ",t1=" + t1 + ",t2="+ t2);
   		  var rowId = entry.id;
   		  addDate(date,t1,t2,rowId,true,"");
   		  rowReady(rowId);
@@ -944,8 +943,42 @@ body {
     	}
     });
     
+    /* For a given date, get the ISO week number
+    *
+    * Based on information at:
+    *
+    *    http://www.merlyn.demon.co.uk/weekcalc.htm#WNR
+    *
+    * Algorithm is to find nearest thursday, it's year
+    * is the year of the week number. Then get weeks
+    * between that date and the first day of that year.
+    *
+    * Note that dates in one year can be weeks of previous
+    * or next year, overlap is up to 3 days.
+    *
+    * e.g. 2014/12/29 is Monday in week  1 of 2015
+    *      2012/1/1   is Sunday in week 52 of 2011
+    */
+   function getWeekNumber(d) {
+       // Copy date so don't modify original
+       d = new Date(d);
+       d.setHours(0,0,0);
+       // Set to nearest Thursday: current date + 4 - current day number
+       // Make Sunday's day number 7
+       d.setDate(d.getDate() + 4 - (d.getDay()||7));
+       // Get first day of year
+       var yearStart = new Date(d.getFullYear(),0,1);
+       // Calculate full weeks to nearest Thursday
+       var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+       // Return array of year and week number
+       return [d.getFullYear(), weekNo];
+   }
+    
     function loadReport(times) {
    		$("#reportContent").empty().append(settings.reportHeader);
+   		var weeklyMinutes = new Object();
+   		var monthlyMinutes = new Object();
+   		var dateMinutes = new Object();
    		
    		var buffer = "";
 		var previousDate = null;    	
@@ -960,6 +993,27 @@ body {
   		  var hh1 = parseInt(entry.startTime.substring(11,13));
   		  var mm1 = parseInt(entry.startTime.substring(14,16));
   		  var durationMs = parseInt(entry.durationMs);
+  		  
+  		  //update date minutes
+  		  var dnString = date.getFullYear()*10000 + (date.getMonth()+1)*100 + date.getDate();
+  		  if (!(dnString in dateMinutes))
+  			  dateMinutes[dnString]=0;
+  		  dateMinutes[dnString]+=durationMs/60000;
+  		  
+  		  //update weekly minutes
+  		  var wn = getWeekNumber(date);
+  		  var wnString = wn[0]*100+wn[1] + "";
+  		  if (!(wnString in weeklyMinutes))
+  			weeklyMinutes[wnString]=0;
+  		  weeklyMinutes[wnString]+=durationMs/60000;
+  		  
+  		  //update monthly minutes
+  		  var mn = date.getMonth()+1;
+  		  var mnString = (date.getFullYear() *100+mn)+"";
+  		  if (!(mnString in monthlyMinutes))
+  			  monthlyMinutes[mnString]=0;
+  		  monthlyMinutes[mnString]+=durationMs/60000;
+  		  
   		  var startMinutes = hh1*60 + mm1;
   		  var finishMinutes = startMinutes + durationMs/60000;
   		  totalMinutes+=finishMinutes - startMinutes;
@@ -1011,6 +1065,9 @@ body {
 	   buffer += '<p style="font-weight:bold;clear:both;margin-top:10px;">Total: '+ formatTime(totalMinutes) + '  ('+ decimalHours +' decimal)</p>';
 	   buffer += settings.reportFooter;
 	   $("#reportContent").append(buffer);
+	   console.log("dateMinutes = " + JSON.stringify(dateMinutes));
+	   console.log("weeklyMinutes = " + JSON.stringify(weeklyMinutes));
+	   console.log("monthlyMinutes = " + JSON.stringify(monthlyMinutes));
     }
 
     $("#entryHelp").click(function () {
@@ -1273,7 +1330,7 @@ body {
 					delimited values.</p>
 				<p>Email all times as zipped attachment to:&nbsp;<input id="email" value=""></input><div id="sendEmail">Send</div></p>
 				<p class="help invisibleCompact" id="sending" >Sending...</p>
-				<p class="help">Send an email to the given email with all times from the database as tab delimited values in a zipped attachment.</p>
+				<p class="help">Send an email with all times from the database as tab delimited values in a zipped attachment.</p>
 			</div>
 
 		</div>
