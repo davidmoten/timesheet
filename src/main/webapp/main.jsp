@@ -5,12 +5,15 @@
 <meta charset="utf-8" />
 <title>Showtime</title>
 
+
 <link rel="stylesheet" media="all"
 	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script  src="https://www.google.com/jsapi"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
 
 <script src="jquery.sortElements.js"></script>
 <style type="text/css">
@@ -195,6 +198,12 @@ body {
 }
 </style>
 <script>
+
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1.0', {'packages':['corechart']});
+  //Set a callback to run when the Google Visualization API is loaded.
+  google.setOnLoadCallback(function () {console.log('visualization api loaded');});
+
   $(function() {
 	  
 	$.ajaxSetup ({  
@@ -1068,7 +1077,34 @@ body {
 	   console.log("dateMinutes = " + JSON.stringify(dateMinutes));
 	   console.log("weeklyMinutes = " + JSON.stringify(weeklyMinutes));
 	   console.log("monthlyMinutes = " + JSON.stringify(monthlyMinutes));
+	   var data = {
+			   "cols": [
+			            {"id":"","label":"Topping","pattern":"","type":"string"},
+			            {"id":"","label":"Slices","pattern":"","type":"number"}
+			          ],
+			      "rows": [
+			            {"c":[{"v":"Mushrooms","f":null},{"v":3,"f":null}]},
+			            {"c":[{"v":"Onions","f":null},{"v":1,"f":null}]},
+			            {"c":[{"v":"Olives","f":null},{"v":1,"f":null}]},
+			            {"c":[{"v":"Zucchini","f":null},{"v":1,"f":null}]},
+			            {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
+			          ]
+			    };
+	   //drawChart(data);
     }
+    
+	google.load('visualization', '1', {'packages':['corechart']});
+	
+	function drawChart(json) {
+	          
+		// Create our data table out of JSON data loaded from server.
+		var data = new google.visualization.DataTable(json);
+		
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.BarChart(document.getElementById('chart'));
+		chart.draw(data, {width: 400, height: 240});
+	}
+	
 
     $("#entryHelp").click(function () {
     	$("#help").toggleClass("invisibleCompact");
@@ -1217,15 +1253,20 @@ body {
 					</div>
 					<br style="clear: both;" />
 				</div>
+				<div id="chart" />
 				<div id="reportContent" style="margin-top: 20px;"></div>
 			</div>
 
 			<div id="about" class="invisibleCompact">
-				<p>Created by Dave Moten 2013 using JQuery, Java and Google AppEngine.</p>
+				<p>Created by Dave Moten 2013 using JQuery, Java and Google
+					AppEngine.</p>
 				<p>
 					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
 				</p>
-				<p>Report any problems/requests as an issue <a href="https://github.com/davidmoten/timesheet/issues">here</a>.</p>
+				<p>
+					Report any problems/requests as an issue <a
+						href="https://github.com/davidmoten/timesheet/issues">here</a>.
+				</p>
 				<p>
 					See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video
 						demo</a>.
@@ -1309,7 +1350,8 @@ body {
 					report.</p>
 				<p>
 					<textarea id="reportHeader"
-						style="width: 90%; max-width: 600px; height: 4em; font-size:80%;font-family: Courier, monospace;" value=""></textarea>
+						style="width: 90%; max-width: 600px; height: 4em; font-size: 80%; font-family: Courier, monospace;"
+						value=""></textarea>
 				</p>
 
 
@@ -1318,7 +1360,8 @@ body {
 					the report.</p>
 				<p>
 					<textarea id="reportFooter"
-						style="width: 90%; max-width: 600px; height: 5em; font-size:80%;font-family: Courier, monospace;" value=""></textarea>
+						style="width: 90%; max-width: 600px; height: 5em; font-size: 80%; font-family: Courier, monospace;"
+						value=""></textarea>
 				</p>
 
 
@@ -1327,9 +1370,14 @@ body {
 				<div id="exportLink">Export</div>
 				<p class="help">Export all times from the database as tab
 					delimited values.</p>
-				<p>Email all times as zipped attachment to:&nbsp;<input id="email" value=""></input><div id="sendEmail">Send</div></p>
-				<p class="help invisibleCompact" id="sending" >Sending...</p>
-				<p class="help">Send an email with all times from the database as tab delimited values in a zipped attachment.</p>
+				<p>
+					Email all times as zipped attachment to:&nbsp;<input id="email"
+						value=""></input>
+				<div id="sendEmail">Send</div>
+				</p>
+				<p class="help invisibleCompact" id="sending">Sending...</p>
+				<p class="help">Send an email with all times from the database
+					as tab delimited values in a zipped attachment.</p>
 			</div>
 
 		</div>
