@@ -388,9 +388,8 @@ body {
     });
     
      $("#roundNowTo").val(settings.roundNowTo);
-    $("#roundNowTo").on('change',function () {
+    $("#roundNowTo").change(function () {
     	settings.roundNowTo = $("#roundNowTo").val();
-    	$("#roundNowTo").val("");
     	persistSettings();
     });
     
