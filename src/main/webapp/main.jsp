@@ -1325,7 +1325,7 @@ body {
 					<p>For example, the work period 13:30-17:30 is entered:</p>
 					<p style="margin-left: 2em;">13301730</p>
 					<p>Hit Enter to submit a value</p>
-					<p>All times are in 24 hour clock.</p>
+					<p>All times are in 24 hour clock. Midnight can be entered as an end time as 2400.</p>
 					<p>Up-arrow = next date, Down-arrow = previous date</p>
 					<p>Type 's' to enter a standard day as defined in Settings</p>
 					<p>Type 'n' to enter the current time rounded as per Settings</p>
