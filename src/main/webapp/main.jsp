@@ -1005,28 +1005,28 @@ body {
   		  var durationMs = parseInt(entry.durationMs);
   		  
   		  //update date minutes
-  		  var dnString = date.getFullYear()*10000 + (date.getMonth()+1)*100 + date.getDate();
+  		  var dnString = date.getFullYear() + "/" + twoDigits(date.getMonth()+1) + "/" + twoDigits(date.getDate());
   		  if (!(dnString in dateMinutes))
   			  dateMinutes[dnString]=0;
   		  dateMinutes[dnString]+=durationMs/60000;
   		  
   		  //update weekly minutes
   		  var wn = getWeekNumber(date);
-  		  var wnString = wn[0]*100+wn[1] + "";
+  		  var wnString = wn[0] + "/" + twoDigits(wn[1]);
   		  if (!(wnString in weeklyMinutes))
   			weeklyMinutes[wnString]=0;
   		  weeklyMinutes[wnString]+=durationMs/60000;
   		  
   		  //update monthly minutes
   		  var mn = date.getMonth()+1;
-  		  var mnString = (date.getFullYear() *100+mn)+"";
+  		  var mnString = date.getFullYear() + "/" + twoDigits(mn);
   		  if (!(mnString in monthlyMinutes))
   			  monthlyMinutes[mnString]=0;
   		  monthlyMinutes[mnString]+=durationMs/60000;
   		  
   		  //update yearly minutes
   		  var mn = date.getFullYear();
-  		  var yString = date.getFullYear()+"";
+  		  var yString = dsate.getFullYear()+"";
   		  if (!(yString in yearlyMinutes))
   			  yearlyMinutes[yString]=0;
   		  yearlyMinutes[yString]+=durationMs/60000;
@@ -1118,6 +1118,12 @@ body {
 	   }
     }
     
+	function countProps(obj) {
+		var l = 0;
+		for (p in obj) l++;
+		return l;
+	}
+    
     function getChartData(groupedMinutes, label) {
     	var data = {};
     	data.cols = [{"id":"","label":label,"pattern":"","type":"string"},
@@ -1136,9 +1142,12 @@ body {
 		// Create our data table out of JSON data loaded from server.
 		var data = new google.visualization.DataTable(json);
 		
+		var height = countProps(json.rows)/50*1100;
+		if (height <200) height = 200;
+		
 		// Instantiate and draw our chart, passing in some options.
 		var chart = new google.visualization.BarChart(document.getElementById(element));
-		chart.draw(data, {width: "85%", height: 600});
+		chart.draw(data, {width: "85%", height: height});
 	}
 	
 
