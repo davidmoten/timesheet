@@ -663,7 +663,7 @@ body {
 		
 		var orderOk = allowEndTimeBeforeStartTime 
 				  ||(parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2))
-		var hour1ok = (parseInt(hh1)>=0 && parseInt(hh1) <=23)|| (parseInt(hh1) ==24 && parseInt(mm1)==0);
+		var hour1ok = (parseInt(hh1)>=0 && parseInt(hh1) <=23);
 		var minute1ok = parseInt(mm1)>=0 && parseInt(mm1) <=59;
 		var hour2ok = (parseInt(hh2)>=0 && parseInt(hh2) <=23)|| (parseInt(hh2) ==24 && parseInt(mm2)==0);
 		var minute2ok = parseInt(mm2)>=0 && parseInt(mm2) <=59;
