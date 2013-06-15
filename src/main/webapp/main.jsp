@@ -389,7 +389,7 @@ body {
     
      $("#roundNowTo").val(settings.roundNowTo);
     $("#roundNowTo").change(function () {
-    	settings.roundNowTo = $("#roundNowTo").val();
+    	settings.roundNowTo = parseInt($("#roundNowTo").val());
     	persistSettings();
     });
     
