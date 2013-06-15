@@ -101,6 +101,17 @@ body {
 	padding-top: 4px;
 }
 
+#now {
+	float: left;
+	margin-left:1em;
+}
+
+#addStandardDay {
+	float: left;
+	margin-left:1em;
+}
+
+
 #entryHelp {
 	float: left;
 	padding-top: 3px;
@@ -234,8 +245,6 @@ body {
 	months[11]="Dec";
 
     var settings={};
-//    settings.autoAdvanceTime="15:00"
-//    settings.standardDay="08301230 13001700";
     
     var workingDays; // an array of integers 0=sunday
 
@@ -753,36 +762,44 @@ body {
 	updateDate();
 	
 	$("#time-range").keydown(function(event) {
-	// Allow: backspace, delete, tab, escape, enter, F5
-	if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || event.keyCode == 116 ||
-		 // Allow: Ctrl+A
-		(event.keyCode == 65 && event.ctrlKey === true) || 
-		 // Allow: home, end, left, right
-		(event.keyCode >= 35 && event.keyCode <= 40)) {
-		     // let it happen, don't do anything
-		     if (event.keyCode==38)
-		         nextDate();
-		     else if (event.keyCode==40)
-				previousDate();
-		     else if (event.keyCode == 13)
-		        submitTime($("#time-range").val());
-		     return;
-	}
-	else {
-		// if s pressed then put in standard day
-		if (event.keyCode == 83){
-			event.preventDefault();
-                        var items = settings.standardDay.split(" ");
-			for (i=0;i<items.length;i++) {
-				submitTime(items[i]);
-			}
+		// Allow: backspace, delete, tab, escape, enter, F5
+		if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || event.keyCode == 116 ||
+			 // Allow: Ctrl+A
+			(event.keyCode == 65 && event.ctrlKey === true) || 
+			 // Allow: home, end, left, right
+			(event.keyCode >= 35 && event.keyCode <= 40)) {
+			     // let it happen, don't do anything
+			     if (event.keyCode==38)
+			         nextDate();
+			     else if (event.keyCode==40)
+					previousDate();
+			     else if (event.keyCode == 13)
+			        submitTime($("#time-range").val());
+			     return;
 		}
-		
-		// Cancel the keypress if not a number 
-		if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-		    event.preventDefault(); 
-		}   
-	}
+		else {
+			// if s pressed then put in standard day
+			if (event.keyCode == 83){
+				event.preventDefault();
+	            var items = settings.standardDay.split(" ");
+				for (i=0;i<items.length;i++) {
+					submitTime(items[i]);
+				}
+			}
+			// if n pressed then put in standard day
+			if (event.keyCode == 78){
+				event.preventDefault();
+				var now = new Date();
+				var hhmm = twoDigits(now.getHours())+twoDigits(now.getMinutes());
+	            $("#time-range").val($("#time-range").val()+hhmm);
+			}
+			
+			
+			// Cancel the keypress if not a number 
+			if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+			    event.preventDefault(); 
+			}   
+		}
 	});
 
     $("#time-range").blur(function () {
@@ -1159,6 +1176,10 @@ body {
     	window.location = "command?command=exportTimes";
     });
     
+    $("#now").button();
+    
+    $("#addStandardDay").button();
+    
     $("#sendEmail").button().click(function () {
 		if (settings.email =="") { alert("You must enter the email address first"); return;}
     	if (offline) return;
@@ -1268,6 +1289,7 @@ body {
 					<p>All times are in 24 hour clock.</p>
 					<p>Up-arrow = next date, Down-arrow = previous date</p>
 					<p>Type 's' to enter a standard day as defined in Settings</p>
+					<p>Type 'n' to enter the current time rounded as per Settings</p>
 					<p>
 						See this <a href="http://www.youtube.com/watch?v=RsRdYpR1FGU">video
 							demo</a>.
@@ -1348,6 +1370,12 @@ body {
 					in the time field. To specify a standard day of 08:30 to 12:30 then
 					back working between 13:00 and 17:30, enter '08301230 13001730' in
 					this field.</p>
+				<p>
+				
+				<p><input type="checkbox" id="endTimeBeforeStartTimeOk" value="true">End time before start time refers to next day</p>
+				
+				<p>Round <i>Now</i> to nearest &nbsp;<input type="roundNowTo" value="5"></input>&nbsp; minutes</p>
+				
 				<p>
 					Number of days to display:&nbsp;<input id="numDaysToDisplay"
 						value="100" />
