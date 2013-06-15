@@ -387,7 +387,14 @@ body {
     	persistSettings();
     });
     
-     $("#roundNowTo").val(settings.roundNowTo);
+    checkbox($("#allowEndTimeBeforeStartTime"),settings.allowEndTimeBeforeStartTime);
+    	$("#allowEndTimeBeforeStartTime").change(function () {
+	        var isChecked = $("#allowEndTimeBeforeStartTime").is(":checked");
+	    	settings.allowEndTimeBeforeStartTime = isChecked;
+	    	persistSettings();
+   		});
+    
+    $("#roundNowTo").val(settings.roundNowTo);
     $("#roundNowTo").change(function () {
     	settings.roundNowTo = parseInt($("#roundNowTo").val());
     	persistSettings();
@@ -470,6 +477,8 @@ body {
 			settings.email = "";
 		if (!settingExists("roundNowTo"))
 			settings.roundNowTo = 5;
+		if (!settingExists("allowEndTimeBeforeStartTime"))
+			settings.allowEndTimeBeforeStartTime = false;
     }
     
     function createReportFooter() {
@@ -577,10 +586,10 @@ body {
 		if (offline) {
         	setTimeout(function () {
 	        	  loadTimes(offlineTimes);
-				  submitTime("08301200");
-				  submitTime("13001730");
-				  submitTime("08001300");
-				  submitTime("14001645");
+				  submitTime("08301200",true);
+				  submitTime("13001730",true);
+				  submitTime("08001300",true);
+				  submitTime("14001645",true);
 				  sortRows();
 	              $("#working").addClass("invisible");
 	              refreshing = false;
@@ -644,17 +653,35 @@ body {
 		$("#delete"+rowId).addClass("delete");
     }
 
-	function submitTime(s) {
+	function submitTime(s,allowAutoAdvance) {
 		var hh1 = s.substring(0,2);
 		var mm1 = s.substring(2,4);
 		var hh2 = s.substring(4,6);
 		var mm2 = s.substring(6,8);
+		var allowEndTimeBeforeStartTime = settings.allowEndTimeBeforeStartTime;
+		console.log("allow=" + allowEndTimeBeforeStartTime);
+		
+		var orderOk = allowEndTimeBeforeStartTime 
+				  ||(parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2))
+		var hour1ok = (parseInt(hh1)>=0 && parseInt(hh1) <=23)|| (parseInt(hh1) ==24 && parseInt(mm1)==0);
+		var minute1ok = parseInt(mm1)>=0 && parseInt(mm1) <=59;
+		var hour2ok = (parseInt(hh2)>=0 && parseInt(hh2) <=23)|| (parseInt(hh2) ==24 && parseInt(mm2)==0);
+		var minute2ok = parseInt(mm2)>=0 && parseInt(mm2) <=59;
+		var timesDifferent = parseInt(hh1)*60+parseInt(mm1) != parseInt(hh2)*60+parseInt(mm2);
 		var valid = s.length==8 && 
-		        (parseInt(hh1)>=0 && parseInt(hh1) <=23|| parseInt(hh1) ==24 && parseInt(mm1)==0) && 
-		        parseInt(mm1)>=0 && parseInt(mm1) <=59 && 
-		        (parseInt(hh2)>=0 && parseInt(hh2) <=23|| parseInt(hh2) ==24 && parseInt(mm2)==0)
-		        parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
-				parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
+		         hour1ok && 
+		         minute1ok && 
+		         hour2ok && 
+		         minute2ok && 
+				 orderOk &&
+				 timesDifferent;				 ; 
+		console.log("valid="+ valid);
+		if (allowEndTimeBeforeStartTime && (parseInt(hh1)*60+parseInt(mm1) > parseInt(hh2)*60+parseInt(mm2))) {
+			submitTime(hh1+mm1+'2400',false);
+			nextDate();
+			submitTime('0000'+hh2+mm2,true);
+			return;
+		}
 		
 		var t1 = hh1 + ":" + mm1;
 		var t2 = hh2 + ":" + mm2;
@@ -667,7 +694,7 @@ body {
 	   	sortRows();
 	   	$("#time-range").val('');
 	
-	   	if (valid &&
+	   	if (valid && allowAutoAdvance &&
 	   			settings.autoAdvanceTime != null &&
 	   			settings.autoAdvanceTime != "" &&
 	   			(hh2+':'+mm2)>=settings.autoAdvanceTime) {
@@ -780,7 +807,7 @@ body {
 			     else if (event.keyCode==40)
 					previousDate();
 			     else if (event.keyCode == 13)
-			        submitTime($("#time-range").val());
+			        submitTime($("#time-range").val(),true);
 			     return;
 		}
 		else {
@@ -789,7 +816,7 @@ body {
 				event.preventDefault();
 	            var items = settings.standardDay.split(" ");
 				for (i=0;i<items.length;i++) {
-					submitTime(items[i]);
+					submitTime(items[i],true);
 				}
 			}
 			// if n pressed then put in standard day
@@ -1384,7 +1411,7 @@ body {
 					this field.</p>
 				<p>
 				
-				<p><input type="checkbox" id="endTimeBeforeStartTimeOk" value="true">End time before start time refers to next day</p>
+				<p><input type="checkbox" id="allowEndTimeBeforeStartTime" value="true">End time before start time refers to next day</p>
 				
 				<p>Round <b>Now</b> to nearest &nbsp;<input id="roundNowTo" value="5"></input>&nbsp; minutes</p>
 				
