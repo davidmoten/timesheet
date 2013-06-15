@@ -651,9 +651,9 @@ body {
 		var hh2 = s.substring(4,6);
 		var mm2 = s.substring(6,8);
 		var valid = s.length==8 && 
-		        parseInt(hh1)>=0 && parseInt(hh1) <=23 && 
+		        (parseInt(hh1)>=0 && parseInt(hh1) <=23|| parseInt(hh1) ==24 && parseInt(mm1)==0) && 
 		        parseInt(mm1)>=0 && parseInt(mm1) <=59 && 
-		        parseInt(hh2)>=0 && parseInt(hh2)<=23 &&
+		        (parseInt(hh2)>=0 && parseInt(hh2) <=23|| parseInt(hh2) ==24 && parseInt(mm2)==0)
 		        parseInt(mm2)>=0 && parseInt(mm2) <=59 && 
 				parseInt(hh1)*60+parseInt(mm1) < parseInt(hh2)*60+parseInt(mm2); 
 		
