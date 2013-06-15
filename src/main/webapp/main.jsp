@@ -919,7 +919,7 @@ body {
     $("#showReport").button().click(function () {
     	$("#reportWorking").removeClass("invisible");
     	if (offline) { 
-    		loadReport(offlineTimes);
+    		loadReport(offlineTimes,true);
     		$("#reportWorking").addClass("invisible");
     	}
     	else {
@@ -939,7 +939,7 @@ body {
 			      dataType: "json",
 			      data: "command=getTimeRange&start="+ startParam + "&finish="+ finishParam,
 			      success: function (response) {
-			    	loadReport(response);
+			    	loadReport(response,true);
 			        console.log("loaded");
 			        sortRows();
 			        $("#reportWorking").addClass("invisible");
@@ -983,7 +983,7 @@ body {
        return [d.getFullYear(), weekNo];
    }
     
-    function loadReport(times) {
+    function loadReport(times, displayChart) {
    		$("#reportContent").empty().append(settings.reportHeader);
    		var weeklyMinutes = new Object();
    		var monthlyMinutes = new Object();
@@ -1090,7 +1090,14 @@ body {
 			            {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
 			          ]
 			    };
-	   //drawChart(data);
+	   data.cols = [{"id":"","label":"Month","pattern":"","type":"string"},
+			            {"id":"","label":"Hours","pattern":"","type":"number"}];
+	   data.rows = [];
+	   for (var month in monthlyMinutes) {
+	       data.rows.push({"c":[{"v":month,"f":null},{"v":monthlyMinutes[month]/60.0,"f":null}]});
+	   }
+	   if (displayChart)
+		   drawChart(data);
     }
     
 	google.load('visualization', '1', {'packages':['corechart']});
@@ -1102,7 +1109,7 @@ body {
 		
 		// Instantiate and draw our chart, passing in some options.
 		var chart = new google.visualization.BarChart(document.getElementById('chart'));
-		chart.draw(data, {width: 400, height: 240});
+		chart.draw(data, {width: "80%", height: 600});
 	}
 	
 
@@ -1253,8 +1260,8 @@ body {
 					</div>
 					<br style="clear: both;" />
 				</div>
-				<div id="chart" />
 				<div id="reportContent" style="margin-top: 20px;"></div>
+				<div id="chart" class="noprint"></div>
 			</div>
 
 			<div id="about" class="invisibleCompact">
