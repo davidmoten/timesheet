@@ -1026,7 +1026,7 @@ body {
   		  
   		  //update yearly minutes
   		  var mn = date.getFullYear();
-  		  var yString = dsate.getFullYear()+"";
+  		  var yString = date.getFullYear()+"";
   		  if (!(yString in yearlyMinutes))
   			  yearlyMinutes[yString]=0;
   		  yearlyMinutes[yString]+=durationMs/60000;
@@ -1309,7 +1309,7 @@ body {
 					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
 				</p>
 				<p>
-					Report any problems/requests as an issue <a
+					Report any problems/requests <a
 						href="https://github.com/davidmoten/timesheet/issues">here</a>.
 				</p>
 				<p>
