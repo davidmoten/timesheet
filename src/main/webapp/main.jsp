@@ -1412,8 +1412,10 @@ body {
 				<p>
 				
 				<p><input type="checkbox" id="allowEndTimeBeforeStartTime" value="true">End time before start time refers to next day</p>
+				<p class="help">If this is checked and end time is before start time then two time entries will be submitted. One till 24:00 then the next from 00:00 the next day.</p>
 				
 				<p>Round <b>Now</b> to nearest &nbsp;<input id="roundNowTo" value="5"></input>&nbsp; minutes</p>
+				<p class="help">When 'n' is pressed in the time entry textbox the current time (HHMM) rounded to the number of minutes is entered.</p>
 				
 				<p>
 					Number of days to display:&nbsp;<input id="numDaysToDisplay"
