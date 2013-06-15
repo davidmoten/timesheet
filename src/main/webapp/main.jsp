@@ -101,16 +101,6 @@ body {
 	padding-top: 4px;
 }
 
-#now {
-	float: left;
-	margin-left:1em;
-}
-
-#addStandardDay {
-	float: left;
-	margin-left:1em;
-}
-
 
 #entryHelp {
 	float: left;
@@ -198,6 +188,14 @@ body {
 .reportTimeTo {
 	float: left;
 	width: 4em;
+}
+
+#roundNowTo {
+	width:3em;
+}
+
+#numDaysToDisplay {
+	width:4em;
 }
 
 .spaceBelow {
@@ -389,6 +387,13 @@ body {
     	persistSettings();
     });
     
+     $("#roundNowTo").val(settings.roundNowTo);
+    $("#roundNowTo").on('change',function () {
+    	settings.roundNowTo = $("#roundNowTo").val();
+    	$("#roundNowTo").val("");
+    	persistSettings();
+    });
+    
     $("#weekStartsOn").val(settings.weekStartsOn);
     $("#weekStartsOn").on('change',function () {
     	settings.weekStartsOn = $("#weekStartsOn").val();
@@ -464,6 +469,8 @@ body {
 			settings.reportFooter = createReportFooter();
 		if (!settingExists("email"))
 			settings.email = "";
+		if (!settingExists("roundNowTo"))
+			settings.roundNowTo = 5;
     }
     
     function createReportFooter() {
@@ -790,6 +797,12 @@ body {
 			if (event.keyCode == 78){
 				event.preventDefault();
 				var now = new Date();
+				var roundTo = settings.roundNowTo;
+				var rem = now.getMinutes() % roundTo ;
+				if (rem >=roundTo/2) 
+					now.setMinutes(now.getMinutes()+roundTo - rem);
+				else
+					now.setMinutes(now.getMinutes() - rem);  
 				var hhmm = twoDigits(now.getHours())+twoDigits(now.getMinutes());
 	            $("#time-range").val($("#time-range").val()+hhmm);
 			}
@@ -1374,7 +1387,7 @@ body {
 				
 				<p><input type="checkbox" id="endTimeBeforeStartTimeOk" value="true">End time before start time refers to next day</p>
 				
-				<p>Round <i>Now</i> to nearest &nbsp;<input type="roundNowTo" value="5"></input>&nbsp; minutes</p>
+				<p>Round <b>Now</b> to nearest &nbsp;<input id="roundNowTo" value="5"></input>&nbsp; minutes</p>
 				
 				<p>
 					Number of days to display:&nbsp;<input id="numDaysToDisplay"
