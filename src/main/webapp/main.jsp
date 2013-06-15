@@ -988,6 +988,7 @@ body {
    		var weeklyMinutes = new Object();
    		var monthlyMinutes = new Object();
    		var dateMinutes = new Object();
+   		var yearlyMinutes = new Object();
    		
    		var buffer = "";
 		var previousDate = null;    	
@@ -1022,6 +1023,13 @@ body {
   		  if (!(mnString in monthlyMinutes))
   			  monthlyMinutes[mnString]=0;
   		  monthlyMinutes[mnString]+=durationMs/60000;
+  		  
+  		  //update yearly minutes
+  		  var mn = date.getFullYear();
+  		  var yString = date.getFullYear()+"";
+  		  if (!(mnString in yearlyMinutes))
+  			  yearlyMinutes[yString]=0;
+  		  yearlyMinutes[yString]+=durationMs/60000;
   		  
   		  var startMinutes = hh1*60 + mm1;
   		  var finishMinutes = startMinutes + durationMs/60000;
@@ -1094,6 +1102,8 @@ body {
 	   
 	   $("#chart").empty()
 	    .append('<h3>Graphs</h3>')
+	    .append('<p>Hours by year:</p>')
+	    .append('<div id="yearlyChart"></div>')
 	    .append('<p>Hours by month:</p>')
 	   	.append('<div id="monthlyChart"></div>')
 	   	.append('<p>Hours by week:</p>')
@@ -1101,6 +1111,7 @@ body {
 	   	.append('<p>Hours by day:</p>')
 	   	.append('<div id="dailyChart"></div>');
 	   if (displayChart) {
+	   	   drawChart(getChartData(yearlyMinutes,"Year"),'yearlyChart');
 		   drawChart(getChartData(monthlyMinutes,"Month"),'monthlyChart');
 		   drawChart(getChartData(weeklyMinutes,"Month"),'weeklyChart');
 		   drawChart(getChartData(dateMinutes,"Month"),'dailyChart');
