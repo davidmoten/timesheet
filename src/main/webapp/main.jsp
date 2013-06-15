@@ -1090,26 +1090,44 @@ body {
 			            {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
 			          ]
 			    };
-	   data.cols = [{"id":"","label":"Month","pattern":"","type":"string"},
-			            {"id":"","label":"Hours","pattern":"","type":"number"}];
-	   data.rows = [];
-	   for (var month in monthlyMinutes) {
-	       data.rows.push({"c":[{"v":month,"f":null},{"v":monthlyMinutes[month]/60.0,"f":null}]});
+			    
+	   
+	   $("#chart").empty()
+	    .append('<h3>Graphs</h3>')
+	    .append('<p>Hours by month:</p>')
+	   	.append('<div id="monthlyChart"></div>')
+	   	.append('<p>Hours by week:</p>')
+	   	.append('<div id="weeklyChart"></div>')
+	   	.append('<p>Hours by day:</p>')
+	   	.append('<div id="dailyChart"></div>');
+	   if (displayChart) {
+		   drawChart(getChartData(monthlyMinutes,"Month"),'monthlyChart');
+		   drawChart(getChartData(weeklyMinutes,"Month"),'weeklyChart');
+		   drawChart(getChartData(dateMinutes,"Month"),'dailyChart');
 	   }
-	   if (displayChart)
-		   drawChart(data);
     }
+    
+    function getChartData(groupedMinutes, label) {
+    	var data = {};
+    	data.cols = [{"id":"","label":label,"pattern":"","type":"string"},
+			            {"id":"","label":"Hours","pattern":"","type":"number"}];
+	   	data.rows = [];
+	   	for (var group in groupedMinutes) {
+	       data.rows.push({"c":[{"v":group,"f":null},{"v":groupedMinutes[group]/60.0,"f":null}]});
+	   	}
+	   	return data;
+	}
     
 	google.load('visualization', '1', {'packages':['corechart']});
 	
-	function drawChart(json) {
+	function drawChart(json, element) {
 	          
 		// Create our data table out of JSON data loaded from server.
 		var data = new google.visualization.DataTable(json);
 		
 		// Instantiate and draw our chart, passing in some options.
-		var chart = new google.visualization.BarChart(document.getElementById('chart'));
-		chart.draw(data, {width: "80%", height: 600});
+		var chart = new google.visualization.BarChart(document.getElementById(element));
+		chart.draw(data, {width: "85%", height: 600});
 	}
 	
 
