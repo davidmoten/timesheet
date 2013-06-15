@@ -1027,7 +1027,7 @@ body {
   		  //update yearly minutes
   		  var mn = date.getFullYear();
   		  var yString = date.getFullYear()+"";
-  		  if (!(mnString in yearlyMinutes))
+  		  if (!(yString in yearlyMinutes))
   			  yearlyMinutes[yString]=0;
   		  yearlyMinutes[yString]+=durationMs/60000;
   		  
