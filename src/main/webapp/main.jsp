@@ -592,6 +592,7 @@ body {
 				  submitTime("14001645",true);
 				  sortRows();
 	              $("#working").addClass("invisible");
+	              $("#time-range").focus();
 	              refreshing = false;
 		  	},1000);
 		} else {
@@ -607,6 +608,7 @@ body {
   		        sortRows();
                 $("#working").addClass("invisible");
                 refreshing = false;
+                $("#time-range").focus();
   		      },
   		      error: function (xhr, ajaxOptions, thrownError) {
   		        alert("could not load times due to " + xhr.status  + ","+ thrownError);
@@ -1287,7 +1289,6 @@ body {
     }
     
     refresh();
-	$("#time-range").focus();
 	$("#more").click(function () {
 		settings.numDaysToDisplay = parseInt(settings.numDaysToDisplay) + 100;
 		refresh();
