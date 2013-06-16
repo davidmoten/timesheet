@@ -400,6 +400,13 @@ body {
     	persistSettings();
     });
     
+    checkbox($("#sortTimesDescending"),settings.sortTimesDescending);
+    $("#sortTimesDescending").change(function () {
+	        var isChecked = $("#sortTimesDescending").is(":checked");
+	    	settings.sortTimesDescending = isChecked;
+	    	persistSettings();
+   		});
+    
     $("#weekStartsOn").val(settings.weekStartsOn);
     $("#weekStartsOn").on('change',function () {
     	settings.weekStartsOn = $("#weekStartsOn").val();
@@ -479,6 +486,9 @@ body {
 			settings.roundNowTo = 5;
 		if (!settingExists("allowEndTimeBeforeStartTime"))
 			settings.allowEndTimeBeforeStartTime = false;
+		if (!settingExists("sortTimesDescending"))
+			settings.sortTimesDescending = true;
+			
     }
     
     function createReportFooter() {
@@ -788,9 +798,13 @@ body {
 
     function sortRows() {
 	   $('#times').find('.row').sortElements(function(a, b){
-
+		 var factor;
+		 if (settings.sortTimesDescending)
+		 	factor = 1;
+		 else 
+		 	factor = -1;
          return orderedFormat($(a).children('div')[1].textContent) + $(a).children('div')[2].textContent <
-                orderedFormat($(b).children('div')[1].textContent) + $(b).children('div')[2].textContent      ? 1 : -1;
+                orderedFormat($(b).children('div')[1].textContent) + $(b).children('div')[2].textContent      ? 1*factor : -1*factor;
        });
 	}
 
@@ -1411,6 +1425,10 @@ body {
 					back working between 13:00 and 17:30, enter '08301230 13001730' in
 					this field.</p>
 				<p>
+				
+				
+				<p><input type="checkbox" id="sortTimesDescending" value="true">Sort times descending.</p>
+				<p class="help">If ticked the times in the Times section will be sorted in reverse chronological order. </p>
 				
 				<p><input type="checkbox" id="allowEndTimeBeforeStartTime" value="true">End time before start time refers to next day</p>
 				<p class="help">If this is checked and end time is before start time then two time entries will be submitted. One till 24:00 then the next from 00:00 the next day.</p>
