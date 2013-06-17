@@ -7,5 +7,6 @@
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 		<property name="appengine.app.name" value="${appengine.app.name}"/>
+		<property name="application.version" value="${project.version}"/>
     </system-properties>
 </appengine-web-app>
