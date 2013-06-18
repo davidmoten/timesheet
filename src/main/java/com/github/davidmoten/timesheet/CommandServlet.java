@@ -39,6 +39,8 @@ public class CommandServlet extends HttpServlet {
 
 	private final Database db = new Database();
 
+	private final Mailer mailer = new Mailer();
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -66,7 +68,8 @@ public class CommandServlet extends HttpServlet {
 
 	private void sendExport(HttpServletRequest req, HttpServletResponse resp) {
 		String email = req.getParameter("email");
-		db.sendExport(email);
+		String timesTabDelimited = db.getTimesTabDelimited();
+		mailer.sendZippedTimesToEmailAsAttachment(timesTabDelimited, email);
 	}
 
 	@Override
