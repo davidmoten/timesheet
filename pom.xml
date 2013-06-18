@@ -67,8 +67,8 @@
 	</developers>
 
   <scm>
-    <connection>scm:git:git@github.com:davidmoten/timesheet.git</connection>
-    <developerConnection>scm:git:git@github.com:davidmoten/timesheet.git</developerConnection>
+    <connection>scm:git:https://github.com:davidmoten/timesheet.git</connection>
+    <developerConnection>scm:git:https://github.com:davidmoten/timesheet.git</developerConnection>
     <url>http://github.com/davidmoten/timesheet</url>
   </scm>
 
