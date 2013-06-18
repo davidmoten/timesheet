@@ -66,6 +66,12 @@
 		</developer>
 	</developers>
 
+  <scm>
+    <connection>scm:git:git@github.com:davidmoten/timesheet.git</connection>
+    <developerConnection>scm:git:git@github.com:davidmoten/timesheet.git</developerConnection>
+    <url>http://github.com/davidmoten/timesheet</url>
+  </scm>
+
     <dependencies>
         <!-- Compile/runtime dependencies -->
         <dependency>
