@@ -34,6 +34,7 @@ public class CommandServlet extends HttpServlet {
 	private static final Object COMMAND_GET_SETTING = "getSetting";
 	private static final Object COMMAND_SET_SETTING = "setSetting";
 	private static final Object COMMAND_SEND_EXPORT = "sendExport";
+	private static final Object COMMAND_GET_VERSION = "getVersion";
 
 	private static final long serialVersionUID = 8026282588720357161L;
 
@@ -62,8 +63,18 @@ public class CommandServlet extends HttpServlet {
 			getSetting(req, resp);
 		else if (COMMAND_SEND_EXPORT.equals(command))
 			sendExport(req, resp);
+		else if (COMMAND_GET_VERSION.equals(command))
+			getVersion(resp);
 		else
 			throw new RuntimeException("unknown command: " + command);
+	}
+
+	private void getVersion(HttpServletResponse resp) {
+		try {
+			resp.getWriter().print(System.getProperty("application.version"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void sendExport(HttpServletRequest req, HttpServletResponse resp) {

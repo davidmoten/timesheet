@@ -1307,6 +1307,32 @@ body {
 		settings.numDaysToDisplay = parseInt(settings.numDaysToDisplay) + 100;
 		refresh();
 	});
+	
+	loadVersion();
+	
+	function loadVersion() {
+    	var version = "?"; 
+		if (offline)
+			updateVersion(version);
+		else 
+	    	$.ajax({
+	            type: "GET",
+	            url: "command",
+	            data: "command=getVersion",
+	            async: true,
+	            success : function(data) {
+	            	updateVersion(data);
+	            },
+	    		error: function (xhr, ajaxOptions, thrownError) {
+			        alert("could not get version due to " + xhr.status  + ","+ thrownError);
+			    }
+	        });
+    }
+	
+	function updateVersion(version) {
+		$("#version").text($("#version").text().replace("APPLICATION_VERSION",version));
+	}
+	
   });
 
   </script>
@@ -1379,7 +1405,7 @@ body {
 			</div>
 
 			<div id="about" class="invisibleCompact">
-				<p>Version ${project.version} created by Dave Moten 2013 using JQuery, Java and Google
+				<p id="version">Version APPLICATION_VERSION created by Dave Moten 2013 using JQuery, Java and Google
 					AppEngine.</p>
 				<p>
 					Source code is <a href="https://github.com/davidmoten/timesheet">here</a>.
