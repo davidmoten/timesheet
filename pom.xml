@@ -6,7 +6,7 @@
 
     <groupId>com.github.davidmoten</groupId>
     <artifactId>timesheet</artifactId>
-    <version>0.4</version>
+    <version>1.0-SNAPSHOT</version>
 
 	<name>${project.artifactId}</name>
 	<description>Time recording web application designed for deployment to Google AppEngine.</description>
