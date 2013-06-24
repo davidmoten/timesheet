@@ -1242,7 +1242,7 @@ body {
     	$.ajax({
             type: "GET",
             url:  "command",
-            data: "command=sendExport&email="+ settings.email,
+            data: "command=sendExport&email="+ encodeURIComponent(settings.email),
             contentType: 'text/plain',
 		    dataType: "html",
             async: true,
