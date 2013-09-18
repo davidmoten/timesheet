@@ -73,6 +73,7 @@ body {
 .delete {
 	color: blue;
 	cursor: pointer;
+	display:inline-block;
 }
 
 #main {
