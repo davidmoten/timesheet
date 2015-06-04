@@ -1,5 +1,6 @@
 timesheet
 =========
+[![Travis CI](https://travis-ci.org/davidmoten/timesheet.svg)](https://travis-ci.org/davidmoten/timesheet)<br/>
 
 Time recording web application configured for deployment to Google AppEngine. 
 
