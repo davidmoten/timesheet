@@ -1369,10 +1369,10 @@ body {
 					<img src="image/help.png" />
 				</div>
                 <div id="previousDate">
-                    <img src="image/down-arrow.png" style="width:16px;height:16px;"/>
+                    <img src="image/down-arrow.png" style="width:8px;height:8px;margin-left:5px;top:-10px"/>
                 </div>
 				<div id="nextDate">
-				    <img src="image/up-arrow.png" style="width:16px;height:16px;"/>
+				    <img src="image/up-arrow.png" style="width:8px;height:8px;margin-left:5px;top:-10px;"/>
 				</div>				
 				<br style="clear: both" />
 				<div id="help" class="invisibleCompact">
