@@ -425,7 +425,7 @@ body {
 		theDate = new Date(y,m,d,0,0,0,0);
 		updateDate();
 	}
-    
+	
     workingDay("sunday");
     workingDay("monday");
     workingDay("tuesday");
@@ -810,6 +810,14 @@ body {
 	}
 
 	updateDate();
+	
+	$("#previousDate").click(function(event) {
+	    previousDate();
+	});
+	
+	$("#nextDate").click(function(event) {
+	    nextDate();
+	});
 	
 	$("#time-range").keydown(function(event) {
 		// Allow: backspace, delete, tab, escape, enter, F5
@@ -1360,6 +1368,12 @@ body {
 				<div id="entryHelp">
 					<img src="image/help.png" />
 				</div>
+                <div id="previousDate">
+                    <img src="image/down-arrow.png" style="width:16px;height:16px;"/>
+                </div>
+				<div id="nextDate">
+				    <img src="image/up-arrow.png" style="width:16px;height:16px;"/>
+				</div>				
 				<br style="clear: both" />
 				<div id="help" class="invisibleCompact">
 					<p>The expected format is:</p>
