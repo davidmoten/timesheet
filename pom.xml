@@ -17,7 +17,7 @@
         <appengine.app.version>1</appengine.app.version>
         <appengine.target.version>1.9.30</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cobertura.version>2.5.1</cobertura.version>
+        <cobertura.version>2.7</cobertura.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <checkstyle.version>2.7</checkstyle.version>
         <findbugs.version>2.3.2</findbugs.version>
@@ -29,7 +29,7 @@
         <jxr.version>2.3</jxr.version>
         <taglist.version>2.4</taglist.version>
         <dashboard.version>1.0.0-beta-1</dashboard.version>
-        <m3.site.version>3.0</m3.site.version>
+        <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
     </properties>
@@ -141,7 +141,7 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>1.7</source>
@@ -152,7 +152,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.6</version>
                 <configuration>
                     <archiveClasses>true</archiveClasses>
                     <webResources>
