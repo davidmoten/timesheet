@@ -4,7 +4,7 @@ timesheet
 
 Time recording web application configured for deployment to Google AppEngine. 
 
-Status: *beta*
+Status: *production*
 
 Features are:
 
@@ -40,6 +40,10 @@ Open this file with your browser (and add the offline parameter):
 How to deploy to appengine
 ----------------------------
     mvn clean package appengine:update -Dappengine.app.name=<YOUR_APP_NAME>
+
+If behind a proxy, use (for example):
+    
+    mvn clean package appengine:update -DproxySet=true -DproxyHost=proxy -DproxyPort=8080 -Dappengine.app.name=<YOUR-APP-NAME>
 
 
 
