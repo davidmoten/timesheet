@@ -2,7 +2,7 @@ timesheet
 =========
 [![Travis CI](https://travis-ci.org/davidmoten/timesheet.svg)](https://travis-ci.org/davidmoten/timesheet)<br/>
 
-Time recording web application configured for deployment to Google AppEngine. 
+Time recording web application configured for deployment to Google AppEngine. I've been using this to record my time for many years.
 
 Status: *production*
 
@@ -10,8 +10,9 @@ Features are:
 
 * Very concise time entry
 * Fast to use
-* Creates printable report on specified time range with signature blocks for yourself and supervisor
 * Enter your daily work periods using the numeric keypad as fast as you can type!
+* Creates printable report on specified time range with signature blocks for yourself and supervisor
+* Displays graphs of your working hours by day, week, month, year
 * Asynchronous non-blocking ui using JQueryUI
 * Built and deployed with Maven
 
