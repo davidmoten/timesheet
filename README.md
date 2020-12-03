@@ -2,7 +2,7 @@ timesheet
 =========
 [![Travis CI](https://travis-ci.org/davidmoten/timesheet.svg)](https://travis-ci.org/davidmoten/timesheet)<br/>
 
-Time recording web application configured for deployment to Google AppEngine. I've been using this to record my time since at least 2012 and still works great (17 Oct 2018).
+Time recording web application configured for deployment to Google AppEngine. I've been using this to record my time since at least 2012 and still works great (4 Dec 2020).
 
 Status: *production*
 
