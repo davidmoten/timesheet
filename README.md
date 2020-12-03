@@ -15,6 +15,7 @@ Features are:
 * Displays graphs of your working hours by day, week, month, year
 * Asynchronous non-blocking ui using JQueryUI
 * Built and deployed with Maven
+* Sends backup of all entered data in csv format to your email address on demand
 
 <img src="https://raw.github.com/davidmoten/timesheet/master/src/docs/screen.png"/>
 
