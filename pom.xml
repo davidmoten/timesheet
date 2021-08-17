@@ -175,7 +175,7 @@
             <plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.target.version}</version>
+                <version>1.9.84</version>
                 <configuration>
                     <disableUpdateCheck>true</disableUpdateCheck>
                 </configuration>
