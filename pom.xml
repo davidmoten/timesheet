@@ -94,7 +94,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>23.0</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
