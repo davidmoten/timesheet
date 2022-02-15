@@ -1,6 +1,6 @@
 timesheet
 =========
-[![Travis CI](https://travis-ci.org/davidmoten/timesheet.svg)](https://travis-ci.org/davidmoten/timesheet)<br/>
+<a href="https://github.com/davidmoten/timesheet/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/timesheet/actions/workflows/ci.yml/badge.svg"/></a><br/>
 
 Time recording web application configured for deployment to Google AppEngine. I've been using this to record my time since at least 2012 and still works great (4 Dec 2020).
 
