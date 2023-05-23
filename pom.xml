@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cobertura.version>2.7</cobertura.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <checkstyle.version>3.2.2</checkstyle.version>
+        <checkstyle.version>3.3.0</checkstyle.version>
         <findbugs.version>3.0.5</findbugs.version>
         <javadoc.version>3.2.0</javadoc.version>
         <pmd.version>3.21.0</pmd.version>
