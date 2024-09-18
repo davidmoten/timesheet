@@ -15,7 +15,7 @@
     <properties>
         <appengine.app.name>its-showtime</appengine.app.name>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>2.0.29</appengine.target.version>
+        <appengine.target.version>2.0.30</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cobertura.version>2.7</cobertura.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
